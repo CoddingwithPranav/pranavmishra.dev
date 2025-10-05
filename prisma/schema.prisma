@@ -13,3 +13,101 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model users {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model aboutMe {
+  id        String   @id @default(uuid())
+  content   String
+  name      String
+  email     String
+  phone     String?
+  address   String?
+  profilePic String?
+  skills    skills[]
+  experiences experiences[]
+  educations educations[]
+  socialLinks socialLinks[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model skills {
+  id        String   @id @default(uuid())
+  name      String
+  level     Int
+  aboutMeId String
+  aboutMe   aboutMe  @relation(fields: [aboutMeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model experiences {
+  id          String   @id @default(uuid())
+  title       String
+  company     String
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+  aboutMeId   String
+  aboutMe     aboutMe  @relation(fields: [aboutMeId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model educations {
+  id          String   @id @default(uuid())
+  school      String
+  degree      String
+  fieldOfStudy String
+  startDate   DateTime
+  endDate     DateTime?
+  grade       String?
+  description String?
+  aboutMeId   String
+  aboutMe     aboutMe  @relation(fields: [aboutMeId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model socialLinks {
+  id        String   @id @default(uuid())
+  platform  String
+  url       String
+  icon      String?
+  aboutMeId String
+  aboutMe   aboutMe  @relation(fields: [aboutMeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model projects {
+  id          String       @id @default(uuid())
+  name        String
+  description String?
+  thubnail   String?
+  notionLink String?
+  githubLink String?
+  liveLink   String?
+  tagId      String
+  tags       tags        @relation(fields: [tagId], references: [id])
+  featured   Boolean     @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+
+model tags {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  projects  projects[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
