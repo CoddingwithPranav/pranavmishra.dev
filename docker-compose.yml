@@ -32,7 +32,6 @@ services:
       - .env
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules
 
 volumes:
   postgres_data:
