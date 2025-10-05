@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { Navbar } from '@/components/navbar/navbar';
+import { BackgroundWrapper } from '../components/background';
+import { TracingBeam } from '@/components/ui/tracing-beam';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -27,7 +30,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <BackgroundWrapper>
+          <TracingBeam>
+            <Navbar />
+            <main>{children}</main>
+          </TracingBeam>
+        </BackgroundWrapper>
       </body>
     </html>
   );
