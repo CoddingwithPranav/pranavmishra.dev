@@ -4,6 +4,7 @@ import './globals.css';
 import { Navbar } from '@/components/navbar/navbar';
 import { BackgroundWrapper } from '../components/background';
 import { TracingBeam } from '@/components/ui/tracing-beam';
+import Footer from '@/components/footer/Footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -35,6 +36,7 @@ export default function RootLayout({
             <Navbar />
             <main>{children}</main>
           </TracingBeam>
+          <Footer/>
         </BackgroundWrapper>
       </body>
     </html>

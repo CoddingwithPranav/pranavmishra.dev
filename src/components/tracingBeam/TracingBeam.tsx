@@ -6,7 +6,7 @@ import { TracingBeam } from "../ui/tracing-beam";
 
 export function TracingBeamDemo({children}: {children?: React.ReactNode}) {
   return (
-    <TracingBeam className="px-6">
+    <TracingBeam className="px-6 h-full">
       {children}
     </TracingBeam>
   );
