@@ -1,12 +1,13 @@
 import { cn } from "@/lib/utils";
 
-export default function FeatureCard({ rotateDeg = 12 }: { rotateDeg?: number }) {
+export default function FeatureCard({ rotateDeg  }: { rotateDeg?: number }) {
+  console.log('FeatureCard rotateDeg:', rotateDeg);
   return (
     <div
       className={cn(
-        `rotate-${rotateDeg}`,
         "p-6 bg-card/10  dark:bg-card/20 backdrop-blur-xl shadow-lg rounded-[var(--radius-lg)] border border-border/20 dark:border-border/30 transition-all duration-300 max-w-sm",
       )}
+      style={{ transform: `rotate(${rotateDeg}deg)` }}
     >
       <h3 className="text-xl font-semibold mb-4 text-primary dark:text-foreground">
         Feature Title

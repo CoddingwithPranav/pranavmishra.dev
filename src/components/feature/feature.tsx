@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import FeatureCard from './featureCard';
 
@@ -14,6 +13,7 @@ export default function Feature() {
               alt="Feature illustration"
               className="w-full max-w-md h-auto object-contain"
             />
+'use client';
             {/* Glassmorphic Icon Overlay */}
             <div className="absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4 sm:translate-x-1/2 sm:translate-y-1/2">
               <div
@@ -42,9 +42,9 @@ export default function Feature() {
         </div>
         
         <div className='flex justify-between '>
-          <FeatureCard  rotateDeg={12}/>
-          <FeatureCard  rotateDeg={10}/>
-          <FeatureCard  rotateDeg={12}/>
+          <FeatureCard  key={'card-1'} rotateDeg={12}/>
+          <FeatureCard  key={'card-2'} />
+          <FeatureCard  key={'card-3'} rotateDeg={12}/> 
         </div>
       </section>
     </>
