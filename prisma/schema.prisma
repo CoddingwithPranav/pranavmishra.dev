@@ -43,6 +43,7 @@ model skills {
   id        String   @id @default(uuid())
   name      String
   level     Int
+  imageUrl  String?
   aboutMeId String
   aboutMe   aboutMe  @relation(fields: [aboutMeId], references: [id])
   createdAt DateTime @default(now())
@@ -95,20 +96,8 @@ model projects {
   notionLink String?
   githubLink String?
   liveLink   String?
-  tagId      String
-  tags       tags        @relation(fields: [tagId], references: [id])
   featured   Boolean     @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
-
-
-model tags {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  projects  projects[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 

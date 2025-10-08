@@ -12,6 +12,7 @@ import ExperienceSection from '@/components/adminComponent/ExperienceSection';
 import EducationSection from '@/components/adminComponent/EducationSection';
 import SocialLinksSection from '@/components/adminComponent/SocialLinkSections';
 import ProjectsSection from '@/components/adminComponent/ProjectSection';
+import { Toaster } from 'react-hot-toast';
 
 type Tab = 'about' | 'skills' | 'experience' | 'education' | 'social' | 'projects';
 
@@ -29,6 +30,40 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen ">
+        <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: 'var(--card)',
+            color: 'var(--foreground)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius)',
+            padding: '12px',
+            boxShadow: 'var(--shadow-lg)',
+          },
+          success: {
+            style: {
+              background: 'var(--primary)',
+              color: 'var(--primary-foreground)',
+            },
+            iconTheme: {
+              primary: 'var(--primary-foreground)',
+              secondary: 'var(--primary)',
+            },
+          },
+          error: {
+            style: {
+              background: 'var(--destructive)',
+              color: 'var(--primary-foreground)',
+            },
+            iconTheme: {
+              primary: 'var(--primary-foreground)',
+              secondary: 'var(--destructive)',
+            },
+          },
+        }}
+      />
+
       <div className="border-b border-border shadow-sm pt-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-6">

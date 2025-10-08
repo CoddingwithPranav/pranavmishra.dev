@@ -19,6 +19,7 @@ export async function getSkills(aboutMeId: string) {
 export async function createSkill(data: {
   name: string;
   level: number;
+  imageUrl?: string;
   aboutMeId: string;
 }) {
   try {
@@ -35,6 +36,7 @@ export async function createSkill(data: {
 export async function updateSkill(id: string, data: {
   name: string;
   level: number;
+  imageUrl?: string;
 }) {
   try {
     const updated = await prisma.skills.update({

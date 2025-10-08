@@ -15,6 +15,7 @@ export async function getAboutMe() {
         socialLinks: true,
       },
     });
+    console.log("Fetched about me:", aboutMe);
     return { success: true, data: aboutMe };
   } catch (error) {
     return { success: false, error: 'Failed to fetch about me data' };
@@ -34,7 +35,9 @@ export async function updateAboutMe(id: string, data: {
       where: { id },
       data,
     });
-    revalidatePath('/admin');
+    console.log("Updated about me:", updated);
+    debugger
+    // revalidatePath('/admin');
     return { success: true, data: updated };
   } catch (error) {
     return { success: false, error: 'Failed to update about me' };

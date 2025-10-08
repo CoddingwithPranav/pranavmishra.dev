@@ -1,4 +1,4 @@
-import { getProjects, getTags, createProject, updateProject, deleteProject } from "@/app/actions/actions";
+import { getProjects, createProject, updateProject, deleteProject } from "@/app/actions/actions";
 import { useState, useEffect } from "react";
 import { FiPlus, FiSave, FiGithub, FiGlobe, FiFileText, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
@@ -7,12 +7,25 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import toast, { Toaster } from "react-hot-toast";
+import ImageCropper from "../imagecopper";
+
+interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  thubnail?: string;
+  notionLink?: string;
+  githubLink?: string;
+  liveLink?: string;
+  featured: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function ProjectsSection() {
-  const [projects, setProjects] = useState<any[]>([]);
-  const [tags, setTags] = useState<any[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
   const [showAdd, setShowAdd] = useState(false);
   const [formData, setFormData] = useState({
@@ -22,21 +35,27 @@ export default function ProjectsSection() {
     notionLink: '',
     githubLink: '',
     liveLink: '',
-    tagId: '',
     featured: false,
   });
+  const [formFile, setFormFile] = useState<File | null>(null);
 
   useEffect(() => {
     loadData();
   }, []);
 
   const loadData = async () => {
-    const [projectsResult, tagsResult] = await Promise.all([
-      getProjects(),
-      getTags()
-    ]);
-    if (projectsResult.success) setProjects(projectsResult.data || []);
-    if (tagsResult.success) setTags(tagsResult.data || []);
+    const projectsResult = await getProjects();
+    if (projectsResult.success) {
+      setProjects(
+        (projectsResult.data || []).map((project: any) => ({
+          ...project,
+          createdAt: typeof project.createdAt === "string" ? project.createdAt : project.createdAt?.toISOString?.() ?? "",
+          updatedAt: typeof project.updatedAt === "string" ? project.updatedAt : project.updatedAt?.toISOString?.() ?? "",
+        }))
+      );
+    } else {
+      toast.error("Failed to load projects. Please try again.");
+    }
   };
 
   const resetForm = () => {
@@ -47,38 +66,132 @@ export default function ProjectsSection() {
       notionLink: '',
       githubLink: '',
       liveLink: '',
-      tagId: '',
       featured: false,
     });
+    setFormFile(null);
     setShowAdd(false);
     setEditing(null);
   };
 
+  const handleImageChange = (file: File | null, preview: string) => {
+    if (file && file.size > 10 * 1024 * 1024) { // 10MB limit
+      toast.error("Image size exceeds 10MB limit.");
+      return;
+    }
+    setFormFile(file);
+    setFormData({ ...formData, thubnail: preview });
+    if (file) {
+      toast.success("Image selected successfully!");
+    }
+  };
+
   const handleAdd = async () => {
-    if (!formData.name || !formData.tagId) return;
-    const result = await createProject(formData);
-    if (result.success) {
-      resetForm();
-      loadData();
+    if (!formData.name) {
+      toast.error("Project name is required.");
+      return;
+    }
+
+    try {
+      let thubnail = formData.thubnail;
+
+      // Upload image if a file is selected
+      if (formFile) {
+        const formDataUpload = new FormData();
+        formDataUpload.append("file", formFile);
+
+        const uploadResponse = await fetch("/api/uploads", {
+          method: "POST",
+          body: formDataUpload,
+        });
+
+        const uploadResult = await uploadResponse.json();
+        if (!uploadResult.success) {
+          throw new Error(uploadResult.error || "Failed to upload image");
+        }
+        thubnail = uploadResult.url;
+      }
+
+      const result = await toast.promise(
+        createProject({ ...formData, thubnail }),
+        {
+          loading: "Adding project...",
+          success: "Project added successfully!",
+          error: "Failed to add project. Please try again.",
+        }
+      );
+
+      if (result.success) {
+        resetForm();
+        loadData();
+      }
+    } catch (error: any) {
+      console.error('Add project error:', error);
     }
   };
 
   const handleUpdate = async (id: string) => {
-    const result = await updateProject(id, formData);
-    if (result.success) {
-      resetForm();
-      loadData();
+    if (!formData.name) {
+      toast.error("Project name is required.");
+      return;
+    }
+
+    try {
+      let thubnail = formData.thubnail;
+
+      // Upload image if a file is selected
+      if (formFile) {
+        const formDataUpload = new FormData();
+        formDataUpload.append("file", formFile);
+
+        const uploadResponse = await fetch("/api/uploads", {
+          method: "POST",
+          body: formDataUpload,
+        });
+
+        const uploadResult = await uploadResponse.json();
+        if (!uploadResult.success) {
+          throw new Error(uploadResult.error || "Failed to upload image");
+        }
+        thubnail = uploadResult.url;
+      }
+
+      const result = await toast.promise(
+        updateProject(id, { ...formData, thubnail }),
+        {
+          loading: "Updating project...",
+          success: "Project updated successfully!",
+          error: "Failed to update project. Please try again.",
+        }
+      );
+
+      if (result.success) {
+        resetForm();
+        loadData();
+      }
+    } catch (error: any) {
+      console.error('Update project error:', error);
     }
   };
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this project?')) {
-      await deleteProject(id);
-      loadData();
+      try {
+        await toast.promise(
+          deleteProject(id),
+          {
+            loading: "Deleting project...",
+            success: "Project deleted successfully!",
+            error: "Failed to delete project. Please try again.",
+          }
+        );
+        loadData();
+      } catch (error: any) {
+        console.error('Delete project error:', error);
+      }
     }
   };
 
-  const startEdit = (project: any) => {
+  const startEdit = (project: Project) => {
     setEditing(project.id);
     setFormData({
       name: project.name,
@@ -87,14 +200,13 @@ export default function ProjectsSection() {
       notionLink: project.notionLink || '',
       githubLink: project.githubLink || '',
       liveLink: project.liveLink || '',
-      tagId: project.tagId,
       featured: project.featured,
     });
+    setShowAdd(false);
   };
 
   return (
     <div className="space-y-8">
-      {/* Add Button */}
       {!showAdd && !editing && (
         <div className="flex justify-end">
           <Button
@@ -132,32 +244,12 @@ export default function ProjectsSection() {
                 />
               </div>
               <div>
-                <Label htmlFor="tagId" className="text-foreground dark:text-foreground">Tag/Category *</Label>
-                <Select
-                  value={formData.tagId}
-                  onValueChange={(value) => setFormData({ ...formData, tagId: value })}
-                >
-                  <SelectTrigger className="mt-2 bg-white/5 dark:bg-black/10 backdrop-blur-sm border-white/10 dark:border-black/10 text-foreground focus:ring-primary/50 focus:border-primary/50 rounded-xl dark:text-foreground dark:focus:ring-primary/50 dark:focus:border-primary/50">
-                    <SelectValue placeholder="Select a tag" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white/10 dark:bg-black/20 backdrop-blur-sm border-white/10 dark:border-black/10 rounded-xl">
-                    {tags.map((tag) => (
-                      <SelectItem key={tag.id} value={tag.id} className="text-foreground dark:text-foreground hover:bg-primary/20 dark:hover:bg-primary/30">
-                        {tag.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="md:col-span-2">
-                <Label htmlFor="thubnail" className="text-foreground dark:text-foreground">Thumbnail URL</Label>
-                <Input
-                  id="thubnail"
-                  type="text"
+                <ImageCropper
                   value={formData.thubnail}
-                  onChange={(e) => setFormData({ ...formData, thubnail: e.target.value })}
-                  className="mt-2 bg-white/5 dark:bg-black/10 backdrop-blur-sm border-white/10 dark:border-black/10 text-foreground focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 rounded-xl dark:text-foreground dark:focus:ring-primary/50 dark:focus:border-primary/50"
-                  placeholder="https://example.com/image.jpg"
+                  onChange={handleImageChange}
+                  label="Project Thumbnail"
+                  aspectRatio={16 / 9} // Matches aspect-video in project list
+                  className="mt-2"
                 />
               </div>
               <div>
@@ -182,7 +274,7 @@ export default function ProjectsSection() {
                   placeholder="https://project.com"
                 />
               </div>
-              <div className="md:col-span-2">
+              <div>
                 <Label htmlFor="notionLink" className="text-foreground dark:text-foreground">Notion Link</Label>
                 <Input
                   id="notionLink"
@@ -219,7 +311,7 @@ export default function ProjectsSection() {
             <div className="flex gap-3">
               <Button
                 onClick={() => editing ? handleUpdate(editing) : handleAdd()}
-                disabled={!formData.name || !formData.tagId}
+                disabled={!formData.name}
                 className={cn(
                   "flex items-center gap-2 rounded-xl bg-primary/80 hover:bg-primary/90 dark:bg-primary/80 dark:hover:bg-primary/70",
                   "backdrop-blur-sm shadow-lg shadow-primary/10 dark:shadow-primary/20 transition-all duration-300"
@@ -261,7 +353,7 @@ export default function ProjectsSection() {
                   className="bg-white/10 dark:bg-black/20 backdrop-blur-sm border border-white/10 dark:border-black/10 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 group shadow-lg shadow-black/5 dark:shadow-white/5"
                 >
                   {project.thubnail && (
-                    <div className="featured-img aspect-video bg-muted overflow-hidden">
+                    <div className="aspect-video bg-muted overflow-hidden">
                       <img
                         src={project.thubnail}
                         alt={project.name}
@@ -282,11 +374,6 @@ export default function ProjectsSection() {
                         dangerouslySetInnerHTML={{ __html: project.description }}
                       />
                     )}
-                    <div className="flex items-center gap-2">
-                      <span className="px-2 py-1 bg-primary/20 dark:bg-primary/30 text-primary text-xs rounded shadow-sm">
-                        {project.tags?.name}
-                      </span>
-                    </div>
                     <div className="flex items-center justify-between">
                       <div className="flex gap-2">
                         {project.githubLink && (

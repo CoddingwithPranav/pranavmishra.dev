@@ -7,13 +7,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import toast, { Toaster } from "react-hot-toast";
+import ImageCropper from "../imagecopper";
+
+interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  icon?: string;
+  aboutMeId: string;
+}
 
 export default function SocialLinksSection() {
-  const [links, setLinks] = useState<any[]>([]);
+  const [links, setLinks] = useState<SocialLink[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
   const [formData, setFormData] = useState({ platform: '', url: '', icon: '' });
   const [showAdd, setShowAdd] = useState(false);
   const [aboutMeId, setAboutMeId] = useState('');
+  const [formFile, setFormFile] = useState<File | null>(null);
 
   useEffect(() => {
     loadData();
@@ -25,49 +36,151 @@ export default function SocialLinksSection() {
       setAboutMeId(aboutResult.data.id);
       const linksResult = await getSocialLinks(aboutResult.data.id);
       if (linksResult.success) {
-        setLinks(linksResult.data || []);
+        setLinks((linksResult.data || []).map((link: any) => ({
+          ...link,
+          icon: link.icon === null ? undefined : link.icon,
+        })));
+      } else {
+        toast.error("Failed to load social links. Please try again.");
       }
+    } else {
+      toast.error("Failed to load profile data. Please try again.");
     }
   };
 
   const resetForm = () => {
     setFormData({ platform: '', url: '', icon: '' });
+    setFormFile(null);
     setShowAdd(false);
     setEditing(null);
   };
 
+  const handleImageChange = (file: File | null, preview: string) => {
+    if (file && file.size > 10 * 1024 * 1024) { // 10MB limit
+      toast.error("Image size exceeds 10MB limit.");
+      return;
+    }
+    setFormFile(file);
+    setFormData({ ...formData, icon: preview });
+    if (file) {
+      toast.success("Image selected successfully!");
+    }
+  };
+
   const handleAdd = async () => {
-    if (!formData.platform || !formData.url || !aboutMeId) return;
-    const result = await createSocialLink({ ...formData, aboutMeId });
-    if (result.success) {
-      resetForm();
-      loadData();
+    if (!formData.platform || !formData.url || !aboutMeId) {
+      toast.error("Platform and URL are required.");
+      return;
+    }
+
+    try {
+      let icon = formData.icon;
+
+      // Upload image if a file is selected
+      if (formFile) {
+        const formDataUpload = new FormData();
+        formDataUpload.append("file", formFile);
+
+        const uploadResponse = await fetch("/api/uploads", {
+          method: "POST",
+          body: formDataUpload,
+        });
+
+        const uploadResult = await uploadResponse.json();
+        if (!uploadResult.success) {
+          throw new Error(uploadResult.error || "Failed to upload image");
+        }
+        icon = uploadResult.url;
+      }
+
+      const result = await toast.promise(
+        createSocialLink({ ...formData, icon ,aboutMeId }),
+        {
+          loading: "Adding social link...",
+          success: "Social link added successfully!",
+          error: "Failed to add social link. Please try again.",
+        }
+      );
+
+      if (result.success) {
+        resetForm();
+        loadData();
+      }
+    } catch (error: any) {
+      console.error('Add social link error:', error);
     }
   };
 
   const handleUpdate = async (id: string) => {
-    const result = await updateSocialLink(id, formData);
-    if (result.success) {
-      resetForm();
-      loadData();
+    if (!formData.platform || !formData.url) {
+      toast.error("Platform and URL are required.");
+      return;
+    }
+
+    try {
+      let icon = formData.icon;
+
+      // Upload image if a file is selected
+      if (formFile) {
+        const formDataUpload = new FormData();
+        formDataUpload.append("file", formFile);
+
+        const uploadResponse = await fetch("/api/uploads", {
+          method: "POST",
+          body: formDataUpload,
+        });
+
+        const uploadResult = await uploadResponse.json();
+        if (!uploadResult.success) {
+          throw new Error(uploadResult.error || "Failed to upload image");
+        }
+        icon = uploadResult.url;
+      }
+
+      const result = await toast.promise(
+        updateSocialLink(id, { ...formData, icon }),
+        {
+          loading: "Updating social link...",
+          success: "Social link updated successfully!",
+          error: "Failed to update social link. Please try again.",
+        }
+      );
+
+      if (result.success) {
+        resetForm();
+        loadData();
+      }
+    } catch (error: any) {
+      console.error('Update social link error:', error);
     }
   };
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this social link?')) {
-      await deleteSocialLink(id);
-      loadData();
+      try {
+        await toast.promise(
+          deleteSocialLink(id),
+          {
+            loading: "Deleting social link...",
+            success: "Social link deleted successfully!",
+            error: "Failed to delete social link. Please try again.",
+          }
+        );
+        loadData();
+      } catch (error: any) {
+        console.error('Delete social link error:', error);
+      }
     }
   };
 
-  const startEdit = (link: any) => {
+  const startEdit = (link: SocialLink) => {
     setEditing(link.id);
     setFormData({ platform: link.platform, url: link.url, icon: link.icon || '' });
+    setShowAdd(false);
   };
 
   return (
     <div className="space-y-8">
-      {/* Add Button */}
       {!showAdd && !editing && (
         <div className="flex justify-end">
           <Button
@@ -92,7 +205,7 @@ export default function SocialLinksSection() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
               <div>
                 <Label htmlFor="platform" className="text-foreground dark:text-foreground">Platform *</Label>
                 <Input
@@ -105,27 +218,25 @@ export default function SocialLinksSection() {
                 />
               </div>
               <div>
-                <Label htmlFor="icon" className="text-foreground dark:text-foreground">Icon Name (React Icons)</Label>
+                <Label htmlFor="url" className="text-foreground dark:text-foreground">URL *</Label>
                 <Input
-                  id="icon"
-                  type="text"
-                  value={formData.icon}
-                  onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                  id="url"
+                  type="url"
+                  value={formData.url}
+                  onChange={(e) => setFormData({ ...formData, url: e.target.value })}
                   className="mt-2 bg-white/5 dark:bg-black/10 backdrop-blur-sm border-white/10 dark:border-black/10 text-foreground focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 rounded-xl dark:text-foreground dark:focus:ring-primary/50 dark:focus:border-primary/50"
-                  placeholder="FiGithub, FiLinkedin"
+                  placeholder="https://github.com/username"
                 />
               </div>
-            </div>
-            <div>
-              <Label htmlFor="url" className="text-foreground dark:text-foreground">URL *</Label>
-              <Input
-                id="url"
-                type="url"
-                value={formData.url}
-                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                className="mt-2 bg-white/5 dark:bg-black/10 backdrop-blur-sm border-white/10 dark:border-black/10 text-foreground focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 rounded-xl dark:text-foreground dark:focus:ring-primary/50 dark:focus:border-primary/50"
-                placeholder="https://github.com/username"
-              />
+              <div>
+                <ImageCropper
+                  value={formData.icon}
+                  onChange={handleImageChange}
+                  label="Platform Image"
+                  aspectRatio={1}
+                  className="mt-2"
+                />
+              </div>
             </div>
             <div className="flex gap-3">
               <Button
@@ -173,9 +284,19 @@ export default function SocialLinksSection() {
                 >
                   <div className="flex justify-between items-start">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-primary/20 dark:bg-primary/30 flex items-center justify-center shadow-sm">
-                        <FiLink className="text-primary h-5 w-5" />
-                      </div>
+                      {link.icon ? (
+                        <div className="w-10 h-10">
+                          <img
+                            src={link.icon}
+                            alt={`${link.platform} logo`}
+                            className="w-full h-full object-cover rounded-lg border border-border"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-primary/20 dark:bg-primary/30 flex items-center justify-center shadow-sm">
+                          <FiLink className="text-primary h-5 w-5" />
+                        </div>
+                      )}
                       <div>
                         <h4 className="font-semibold text-foreground dark:text-foreground">{link.platform}</h4>
                         <a

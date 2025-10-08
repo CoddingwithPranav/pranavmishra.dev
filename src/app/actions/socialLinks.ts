@@ -22,11 +22,14 @@ export async function createSocialLink(data: {
   icon?: string;
   aboutMeId: string;
 }) {
+
   try {
+    console.log("Creating social link with data:", data);
     const link = await prisma.socialLinks.create({
       data,
     });
     revalidatePath('/admin');
+    console.log("Created social link:", link);
     return { success: true, data: link };
   } catch (error) {
     return { success: false, error: 'Failed to create social link' };

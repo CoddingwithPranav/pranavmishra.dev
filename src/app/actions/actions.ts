@@ -8,9 +8,7 @@ import { revalidatePath } from 'next/cache';
 export async function getProjects() {
   try {
     const projects = await prisma.projects.findMany({
-      include: {
-        tags: true,
-      },
+
       orderBy: { createdAt: 'desc' },
     });
     return { success: true, data: projects };
@@ -26,7 +24,6 @@ export async function createProject(data: {
   notionLink?: string;
   githubLink?: string;
   liveLink?: string;
-  tagId: string;
   featured?: boolean;
 }) {
   try {
@@ -47,7 +44,6 @@ export async function updateProject(id: string, data: {
   notionLink?: string;
   githubLink?: string;
   liveLink?: string;
-  tagId: string;
   featured?: boolean;
 }) {
   try {
@@ -71,60 +67,5 @@ export async function deleteProject(id: string) {
     return { success: true };
   } catch (error) {
     return { success: false, error: 'Failed to delete project' };
-  }
-}
-
-// ==================== TAGS ACTIONS ====================
-
-export async function getTags() {
-  try {
-    const tags = await prisma.tags.findMany({
-      include: {
-        _count: {
-          select: { projects: true },
-        },
-      },
-      orderBy: { name: 'asc' },
-    });
-    return { success: true, data: tags };
-  } catch (error) {
-    return { success: false, error: 'Failed to fetch tags' };
-  }
-}
-
-export async function createTag(data: { name: string }) {
-  try {
-    const tag = await prisma.tags.create({
-      data,
-    });
-    revalidatePath('/admin');
-    return { success: true, data: tag };
-  } catch (error) {
-    return { success: false, error: 'Failed to create tag' };
-  }
-}
-
-export async function updateTag(id: string, data: { name: string }) {
-  try {
-    const updated = await prisma.tags.update({
-      where: { id },
-      data,
-    });
-    revalidatePath('/admin');
-    return { success: true, data: updated };
-  } catch (error) {
-    return { success: false, error: 'Failed to update tag' };
-  }
-}
-
-export async function deleteTag(id: string) {
-  try {
-    await prisma.tags.delete({
-      where: { id },
-    });
-    revalidatePath('/admin');
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: 'Failed to delete tag' };
   }
 }
