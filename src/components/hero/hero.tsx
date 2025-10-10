@@ -6,10 +6,10 @@ import Link from "next/link";
 
 export default function Hero() {
   const socialLinks = [
-    { name: "GitHub", icon: <FaGithub />, href: "https://github.com" },
+    { name: "GitHub", icon: <FaGithub />, href: "https://github.com/CoddingwithPranav" },
     { name: "Twitter", icon: <FaTwitter />, href: "https://twitter.com" },
-    { name: "LinkedIn", icon: <FaLinkedin />, href: "https://linkedin.com" },
-    { name: "Resume", icon: <FaFile />, href: "/resume.pdf" },
+    { name: "LinkedIn", icon: <FaLinkedin />, href: "https://www.linkedin.com/in/pranav-mishra-9416a6289" },
+    { name: "Resume", icon: <FaFile />, href: "https://app.sajilocv.com/cv/578fb001-eac0-4c0a-b2a2-e1acd93be130" },
   ];
 
   return (
@@ -18,8 +18,8 @@ export default function Hero() {
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary dark:text-primary mt-4 tracking-tight">
           I'm Pranav
         </h1>
-        <p className="text-base md:text-lg text-muted-foreground mt-4 max-w-md leading-relaxed">
-          I work with the React Ecosystem, crafting solutions and writing to teach people how to rebuild and redefine fundamental concepts through mental models.
+        <p className="text-base md:text-lg text-muted-foreground mt-4 leading-relaxed">
+        I'm Full-Stack JavaScript Developer proficient in building scalable web applications using Angular, React, and Next.js for dynamic frontends, alongside Node.js and Express for robust APIs. 
         </p>
         <div className="flex gap-4 mt-6">
           <Button
