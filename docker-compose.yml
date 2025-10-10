@@ -34,5 +34,22 @@ services:
       - .:/usr/src/app
     command: sh ./entrypoint.sh
 
+  prisma-studio:
+    image: node:18-alpine
+    restart: always
+    ports:
+      - '5555:5555'
+    depends_on:
+      db:
+        condition: service_healthy
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+    command: npx prisma studio --port 5555
+    env_file:
+      - .env
+
 volumes:
   postgres_data:
