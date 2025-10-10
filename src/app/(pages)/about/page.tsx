@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { getAboutMe } from "@/app/actions/aboutMe";
 import { MdAccountCircle } from "react-icons/md";
@@ -32,77 +33,47 @@ interface AboutMe {
   }>;
 }
 
-// Static fallback data
-const fallbackAboutMe: AboutMe = {
-  id: "static-1",
-  name: "Pranav Mishra",
-  title: "Founding Full-stack Engineer at Dimension",
-  bio: "Hello! You can call me Clarence. I am a Software Engineer who works with the React ecosystem and writes to teach people how to rebuild and redefine fundamental concepts through mental models. I was born in 2001 in Jakarta, Indonesia. When the pandemic hit 5 years ago, my university was closed for a few weeks, and I started to learn web development, especially front-end development, out of boredom. As part of my learning journey, I started writing blog articles as a way to solidify my knowledge. When I posted them here as documentation, I discovered that many people found them valuable. Hopefully, it can help you too. I am also a full-stack engineer, here are my current favorite tech stack:",
-  profileImage: "https://avatars.githubusercontent.com/u/22481268?v=4",
-  techStack: ["Angular", "Next.js"],
-  currentActivities: [
-    "I'm a full-stack engineer at Dimension while working remotely from Jakarta, Indonesia",
-    "I regularly solo travel, usually for 2 weeks at a time ✈️. I've been doing it for so far",
-    "I'm currently building a portfolio curation platform for Indonesian software engineers on softwareengineer.id",
-    "I'm a mentor! I do revision-style mentorship",
-  ],
-  retrospectives: [
-    {
-      year: "2024",
-      title: "The 2024 Retrospective",
-      description: "First Full-Time Year, Solo Travel while Working, Socializing, and more!",
-      views: 2030,
-    },
-    {
-      year: "2023",
-      title: "The 2023 Retrospective",
-      description: "Graduation, Tech Writing, First Job, Mentorship, and more!",
-      views: 3020,
-    },
-  ],
-  experiences: [
-    {
-      title: "Founding Full-Stack Engineer",
-      company: "Dimension",
-      startDate: "SEP 2023",
-      endDate: "PRESENT",
-      description:
-        "Dimension is a collaboration platform for modern engineering teams. It bridges the gap between communication, cloud, code, projects, and more—with an incredible developer experience.",
-      achievements: [
-        "Led the rewrite from the MVP version, which was previously fragile with numerous bugs and technical debt. Convinced the team to transition to a new monorepo project with a solid foundation, ensuring code quality and developing conventions to maintain consistency and reliability across the team.",
-        "Led the transition of the application to a local-first setup using IndexedDB, significantly improving speed by reducing query and update times from about 500ms to nearly instant (around 5ms).",
-        "Developed a comprehensive front-end design system with well-structured and easy-to-use APIs, equipped with accessibility and keyboard navigation. This system has been praised by colleagues for enhancing the development experience and accelerating feature development.",
-      ],
-    },
-  ],
-};
-
 export default function AboutPage() {
-  const [aboutMe, setAboutMe] = useState<AboutMe>(fallbackAboutMe);
+  const [aboutMe, setAboutMe] = useState<AboutMe | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
       const aboutResult = await getAboutMe();
       if (aboutResult.success && aboutResult.data) {
         setAboutMe({
-          id: aboutResult.data.id || fallbackAboutMe.id,
-          name: aboutResult.data.name || fallbackAboutMe.name,
-          title: fallbackAboutMe.title,
-          bio: fallbackAboutMe.bio,
-          profileImage: fallbackAboutMe.profileImage,
-          techStack:  fallbackAboutMe.techStack,
-          currentActivities: fallbackAboutMe.currentActivities,
-          retrospectives: fallbackAboutMe.retrospectives,
-          experiences: fallbackAboutMe.experiences,
+          id: aboutResult.data.id,
+          name: aboutResult.data.name || "Unknown",
+          title: aboutResult.data.title || "No Title",
+          bio: aboutResult.data.bio || "",
+          profileImage: aboutResult.data.profileImage || '',
+          techStack: aboutResult.data.techStack || [],
+          currentActivities: aboutResult.data.currentActivities || [],
+          retrospectives: aboutResult.data.retrospectives || [],
+          experiences: (aboutResult.data.experiences || []).map((exp: any) => ({
+            title: exp.title,
+            company: exp.company,
+            startDate: exp.startDate instanceof Date ? exp.startDate.toISOString() : String(exp.startDate),
+            endDate: exp.endDate ? (exp.endDate instanceof Date ? exp.endDate.toISOString() : String(exp.endDate)) : undefined,
+            description: exp.description ?? "",
+            achievements: exp.achievements || [],
+          })),
         });
       } else {
-        toast.error("Failed to load about me data. Displaying sample data.", {
+        toast.error("Failed to load about me data.", {
           id: "about-error",
         });
       }
     };
     loadData();
   }, []);
+
+  if (!aboutMe) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6 md:px-12 pt-36">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 md:px-12 pt-36">
@@ -158,9 +129,9 @@ export default function AboutPage() {
 
       <div className="flex flex-col md:flex-row gap-20 max-w-4xl w-full">
         <div className="flex-shrink-0">
-          <div className="featured-img">
+          <div className="featured-img ">
             <img
-              src={aboutMe.profileImage}
+              src={aboutMe.profileImage || "https://via.placeholder.com/150"}
               alt={`${aboutMe.name} profile`}
               className="w-48 object-cover rounded-[var(--radius-lg)] shadow-lg hover:shadow-xl transition-shadow"
             />
@@ -171,8 +142,11 @@ export default function AboutPage() {
             {aboutMe.name}
           </h1>
           <span className="text-muted-foreground mb-4 block">{aboutMe.title}</span>
-          <p className="text-muted-foreground leading-relaxed mb-4">{aboutMe.bio}</p>
-          <div className="flex gap-4 text-primary">
+          <div
+            className="prose prose-sm max-w-none text-muted-foreground leading-relaxed mb-4 dark:text-muted-foreground"
+            dangerouslySetInnerHTML={{ __html: aboutMe.bio }}
+          />
+          <div className="flex gap-4 text-primary flex">
             {(aboutMe.techStack ?? []).map((tech, index) => (
               <span key={index} className="text-lg">{tech}</span>
             ))}
@@ -218,7 +192,10 @@ export default function AboutPage() {
                 <FaEye className="text-lg" aria-label="Views icon" /> {retro.views.toLocaleString()} views
               </span>
               <h3 className="text-xl font-medium text-secondary">{retro.title}</h3>
-              <p className="text-muted-foreground font-light">{retro.description}</p>
+              <div
+                className="prose prose-sm max-w-none text-muted-foreground dark:text-muted-foreground"
+                dangerouslySetInnerHTML={{ __html: retro.description }}
+              />
             </div>
           ))}
         </div>
@@ -235,7 +212,7 @@ export default function AboutPage() {
           {(aboutMe.experiences ?? []).map((exp, index) => (
             <div key={index} className="flex flex-col md:flex-row gap-6">
               <div className="flex-shrink-0 text-muted-foreground">
-                {exp.startDate} - {exp.endDate || "PRESENT"}
+                {new Date(exp.startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - {exp.endDate ? new Date(exp.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : "PRESENT"}
               </div>
               <div className="flex-1">
                 <h1 className="text-2xl font-semibold text-secondary mb-2">{exp.title}</h1>

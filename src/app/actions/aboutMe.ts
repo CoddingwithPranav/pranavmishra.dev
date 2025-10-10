@@ -1,9 +1,7 @@
-'use server';
-
+"use server";
 
 import { prisma } from '@/lib/prismaClient';
 import { revalidatePath } from 'next/cache';
-
 
 export async function getAboutMe() {
   try {
@@ -13,6 +11,7 @@ export async function getAboutMe() {
         experiences: true,
         educations: true,
         socialLinks: true,
+        retrospectives: true,
       },
     });
     console.log("Fetched about me:", aboutMe);
@@ -24,11 +23,14 @@ export async function getAboutMe() {
 
 export async function updateAboutMe(id: string, data: {
   name: string;
-  email: string;
+  title: string;
+  bio: string;
+  email?: string;
   phone?: string;
   address?: string;
-  profilePic?: string;
-  content: string;
+  profileImage?: string;
+  techStack?: string[];
+  currentActivities?: string[];
 }) {
   try {
     const updated = await prisma.aboutMe.update({
@@ -36,8 +38,7 @@ export async function updateAboutMe(id: string, data: {
       data,
     });
     console.log("Updated about me:", updated);
-    debugger
-    // revalidatePath('/admin');
+    revalidatePath('/admin');
     return { success: true, data: updated };
   } catch (error) {
     return { success: false, error: 'Failed to update about me' };
@@ -46,11 +47,14 @@ export async function updateAboutMe(id: string, data: {
 
 export async function createAboutMe(data: {
   name: string;
-  email: string;
+  title: string;
+  bio: string;
+  email?: string;
   phone?: string;
   address?: string;
-  profilePic?: string;
-  content: string;
+  profileImage?: string;
+  techStack?: string[];
+  currentActivities?: string[];
 }) {
   try {
     const created = await prisma.aboutMe.create({

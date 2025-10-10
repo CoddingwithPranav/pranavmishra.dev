@@ -6,6 +6,10 @@ import { BackgroundWrapper } from '../components/background';
 import { TracingBeam } from '@/components/ui/tracing-beam';
 import Footer from '@/components/footer/Footer';
 
+import "react-notion-x/src/styles.css";
+import "prismjs/themes/prism-tomorrow.css";
+import "katex/dist/katex.min.css";
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],

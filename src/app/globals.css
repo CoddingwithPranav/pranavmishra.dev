@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import "tw-animate-css";
 
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -136,51 +137,106 @@
 
 
 
-
 .featured-img {
   position: relative;
+  width: 100%;
+  max-width: 120px; /* Mobile default */
   
   img {
     height: auto;
     display: block;
+    width: 100%;
+    max-width: 100%;
   }
   
   &:hover {
     &:before {
-      bottom: 2rem;
-      right: 3rem;
+      bottom: 1rem;
+      right: 1rem;
     }
     
     &:after {
-      top: 2rem;
-      left: 3rem;
+      top: 1rem;
+      left: 1rem;
     }
   }
   
-  &:before, &:after {
-    content:'';
+  &:before,
+  &:after {
+    content: '';
     position: absolute;
     width: 100%;
     height: 100%;
     z-index: -1;
-    transition: .3s ease;
+    transition: 0.3s ease;
   }
   
   &:before {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAU0lEQVQoU43QMRYAEQwE0ExHyf3vqNxybF6wRIpNZ3whIL74UJDh4zNQpFWTSMOx9y0m0m6FdmDDBnc073QYIQqwweDxa5jR+Zru+gUNCvkPvrgDcCIgJ6cWP4UAAAAASUVORK5CYII=) repeat;
-    bottom: 1rem;
-    right: 1rem;
+    bottom: 0.5rem;
+    right: 0.5rem;
   }
   
   &:after {
     background: var(--primary);
-    top: 1rem;
-    left: 1rem;
+    top: 0.5rem;
+    left: 0.5rem;
+  }
+
+  /* Tablet (640px and up) */
+  @media (min-width: 640px) {
+    max-width: 160px;
+
+    &:hover {
+      &:before {
+        bottom: 1.5rem;
+        right: 1.5rem;
+      }
+      
+      &:after {
+        top: 1.5rem;
+        left: 1.5rem;
+      }
+    }
+    
+    &:before {
+      bottom: 0.75rem;
+      right: 0.75rem;
+    }
+    
+    &:after {
+      top: 0.75rem;
+      left: 0.75rem;
+    }
+  }
+
+  /* Desktop (768px and up) */
+  @media (min-width: 768px) {
+    max-width: 192px; /* Matches w-48 (192px) in AboutPage.tsx */
+
+    &:hover {
+      &:before {
+        bottom: 2rem;
+        right: 2rem;
+      }
+      
+      &:after {
+        top: 2rem;
+        left: 2rem;
+      }
+    }
+    
+    &:before {
+      bottom: 1rem;
+      right: 1rem;
+    }
+    
+    &:after {
+      top: 1rem;
+      left: 1rem;
+    }
   }
 }
-
-
-
 
 
 

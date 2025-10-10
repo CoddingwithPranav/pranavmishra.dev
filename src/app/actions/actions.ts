@@ -47,10 +47,12 @@ export async function updateProject(id: string, data: {
   featured?: boolean;
 }) {
   try {
+    console.log('Updating project with data:',id ,  data);
     const updated = await prisma.projects.update({
       where: { id },
       data,
     });
+    console.log('Project updated:', updated);
     revalidatePath('/admin');
     return { success: true, data: updated };
   } catch (error) {
