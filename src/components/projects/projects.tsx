@@ -42,50 +42,13 @@ export default function ProjectSection() {
         const featured = mappedProjects.filter((p) => p.featured).slice(0, 3);
         const nonFeatured = mappedProjects.filter((p) => !p.featured).slice(0, 3 - featured.length);
         setProjects([...featured, ...nonFeatured].slice(0, 3));
-      } else {
-        toast.error("Failed to load projects.", {
-          id: "projects-error",
-        });
-      }
+      } 
     };
     loadData();
   }, []);
 
   return (
     <section className="min-h-screen flex flex-col px-4 sm:px-6 md:px-12 py-8 sm:py-12">
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: "var(--card)",
-            color: "var(--foreground)",
-            border: "1px solid var(--border)",
-            borderRadius: "var(--radius)",
-            padding: "12px",
-            boxShadow: "var(--shadow-lg)",
-          },
-          success: {
-            style: {
-              background: "var(--primary)",
-              color: "var(--primary-foreground)",
-            },
-            iconTheme: {
-              primary: "var(--primary-foreground)",
-              secondary: "var(--primary)",
-            },
-          },
-          error: {
-            style: {
-              background: "var(--destructive)",
-              color: "var(--primary-foreground)",
-            },
-            iconTheme: {
-              primary: "var(--primary-foreground)",
-              secondary: "var(--destructive)",
-            },
-          },
-        }}
-      />
       <h1 className="text-4xl sm:text-5xl md:text-6xl text-secondary pb-3 font-semibold">
         Featured <span className="text-primary">Projects</span>
       </h1>

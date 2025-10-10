@@ -73,47 +73,11 @@ export default function ProjectPage() {
           updatedAt: typeof project.updatedAt === "string" ? project.updatedAt : project.updatedAt?.toISOString?.() ?? "",
         }))
       );
-    } else {
-      toast.error("Failed to load projects. Displaying sample projects.");
-      setProjects(fallbackProjects);
-    }
+    } 
   };
 
   return (
     <>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: 'var(--card)',
-            color: 'var(--foreground)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius)',
-            padding: '12px',
-            boxShadow: 'var(--shadow-lg)',
-          },
-          success: {
-            style: {
-              background: 'var(--primary)',
-              color: 'var(--primary-foreground)',
-            },
-            iconTheme: {
-              primary: 'var(--primary-foreground)',
-              secondary: 'var(--primary)',
-            },
-          },
-          error: {
-            style: {
-              background: 'var(--destructive)',
-              color: 'var(--primary-foreground)',
-            },
-            iconTheme: {
-              primary: 'var(--primary-foreground)',
-              secondary: 'var(--destructive)',
-            },
-          },
-        }}
-      />
       <div className="min-h-screen flex flex-col items-center">
         <div className="flex justify-center flex-col gap-4 mt-40">
           <span className="flex justify-center">

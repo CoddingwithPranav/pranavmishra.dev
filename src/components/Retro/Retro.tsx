@@ -32,10 +32,6 @@ export default function Retro() {
             id: "retro-error",
           });
         }
-      } else {
-        toast.error("Failed to load About Me data", {
-          id: "about-error",
-        });
       }
     };
     loadData();
@@ -43,39 +39,6 @@ export default function Retro() {
 
   return (
     <section className="min-h-screen flex flex-col px-4 sm:px-6 md:px-12 py-12">
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: "var(--card)",
-            color: "var(--foreground)",
-            border: "1px solid var(--border)",
-            borderRadius: "var(--radius)",
-            padding: "12px",
-            boxShadow: "var(--shadow-lg)",
-          },
-          success: {
-            style: {
-              background: "var(--primary)",
-              color: "var(--primary-foreground)",
-            },
-            iconTheme: {
-              primary: "var(--primary-foreground)",
-              secondary: "var(--primary)",
-            },
-          },
-          error: {
-            style: {
-              background: "var(--destructive)",
-              color: "var(--primary-foreground)",
-            },
-            iconTheme: {
-              primary: "var(--primary-foreground)",
-              secondary: "var(--destructive)",
-            },
-          },
-        }}
-      />
       <div className="flex flex-col mb-8 max-w-4xl mx-auto">
         <span className="text-secondary opacity-50 text-sm sm:text-base">
           the yearly

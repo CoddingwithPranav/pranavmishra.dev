@@ -58,11 +58,7 @@ export default function AboutPage() {
             achievements: exp.achievements || [],
           })),
         });
-      } else {
-        toast.error("Failed to load about me data.", {
-          id: "about-error",
-        });
-      }
+      } 
     };
     loadData();
   }, []);
@@ -77,40 +73,6 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 md:px-12 pt-36">
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: "var(--card)",
-            color: "var(--foreground)",
-            border: "1px solid var(--border)",
-            borderRadius: "var(--radius)",
-            padding: "12px",
-            boxShadow: "var(--shadow-lg)",
-          },
-          success: {
-            style: {
-              background: "var(--primary)",
-              color: "var(--primary-foreground)",
-            },
-            iconTheme: {
-              primary: "var(--primary-foreground)",
-              secondary: "var(--primary)",
-            },
-          },
-          error: {
-            style: {
-              background: "var(--destructive)",
-              color: "var(--primary-foreground)",
-            },
-            iconTheme: {
-              primary: "var(--primary-foreground)",
-              secondary: "var(--destructive)",
-            },
-          },
-        }}
-      />
-
       <div className="text-center max-w-2xl mb-16">
         <span className="flex justify-center mb-4">
           <MdAccountCircle
