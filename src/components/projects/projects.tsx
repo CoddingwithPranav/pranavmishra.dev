@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { getProjects } from "@/app/actions/actions";
 import ProjectCard from "./ProjectCard";
@@ -18,45 +19,8 @@ interface Project {
   updatedAt: string;
 }
 
-// Static fallback data
-const fallbackProjects: Project[] = [
-  {
-    id: "static-1",
-    name: "Hexcap",
-    description: "A game that combines ISO and physical puzzle game, using 3D, 360 world view, and AR",
-    thubnail: "https://assets.justinmind.com/wp-content/uploads/2020/02/dashboard-example-applify.png",
-    githubLink: "https://github.com/example/hexcap",
-    liveLink: "https://hexcap.example.com",
-    featured: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "static-2",
-    name: "Portfolio",
-    description: "A personal portfolio showcasing my projects and skills",
-    thubnail: "https://assets.justinmind.com/wp-content/uploads/2020/02/dashboard-example-applify.png",
-    githubLink: "https://github.com/example/portfolio",
-    liveLink: "https://portfolio.example.com",
-    featured: false,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "static-3",
-    name: "Task Manager",
-    description: "A task management app with real-time collaboration features",
-    thubnail: "https://assets.justinmind.com/wp-content/uploads/2020/02/dashboard-example-applify.png",
-    githubLink: "https://github.com/example/task-manager",
-    liveLink: "https://taskmanager.example.com",
-    featured: false,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-];
-
 export default function ProjectSection() {
-  const [projects, setProjects] = useState<Project[]>(fallbackProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -79,35 +43,73 @@ export default function ProjectSection() {
         const nonFeatured = mappedProjects.filter((p) => !p.featured).slice(0, 3 - featured.length);
         setProjects([...featured, ...nonFeatured].slice(0, 3));
       } else {
-        toast.error("Failed to load projects. Displaying sample projects.", {
+        toast.error("Failed to load projects.", {
           id: "projects-error",
         });
-        setProjects(fallbackProjects);
       }
     };
     loadData();
   }, []);
 
   return (
-    <section className="min-h-screen flex flex-col">
-      <h1 className="text-6xl text-secondary pb-3 font-semibold">
+    <section className="min-h-screen flex flex-col px-4 sm:px-6 md:px-12 py-8 sm:py-12">
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "var(--card)",
+            color: "var(--foreground)",
+            border: "1px solid var(--border)",
+            borderRadius: "var(--radius)",
+            padding: "12px",
+            boxShadow: "var(--shadow-lg)",
+          },
+          success: {
+            style: {
+              background: "var(--primary)",
+              color: "var(--primary-foreground)",
+            },
+            iconTheme: {
+              primary: "var(--primary-foreground)",
+              secondary: "var(--primary)",
+            },
+          },
+          error: {
+            style: {
+              background: "var(--destructive)",
+              color: "var(--primary-foreground)",
+            },
+            iconTheme: {
+              primary: "var(--primary-foreground)",
+              secondary: "var(--destructive)",
+            },
+          },
+        }}
+      />
+      <h1 className="text-4xl sm:text-5xl md:text-6xl text-secondary pb-3 font-semibold">
         Featured <span className="text-primary">Projects</span>
       </h1>
-      <p className="text-2xl text-secondary pb-10">A selection of projects that I&apos;ve worked on.</p>
-      <div className="flex flex-col gap-10">
-        {projects.map((project, index) => (
-          <ProjectCard key={project.id} project={project} reverse={index % 2 === 1} />
-        ))}
+      <p className="text-lg sm:text-xl md:text-2xl text-secondary pb-6 sm:pb-10 max-w-2xl">
+        A selection of projects that I&apos;ve worked on.
+      </p>
+      <div className="flex flex-col gap-6 sm:gap-8 md:gap-10">
+        {projects.length > 0 ? (
+          projects.map((project, index) => (
+            <ProjectCard key={project.id} project={project} reverse={index % 2 === 1} />
+          ))
+        ) : (
+          <p className="text-center text-muted-foreground text-base sm:text-lg">
+            No projects available.
+          </p>
+        )}
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-6 sm:mt-8 md:mt-10">
         <Button
-          className="mt-10"
           variant="link"
           asChild
+          className="text-base sm:text-lg text-primary hover:text-primary/80"
         >
-          <a href="/projects" className="text-primary">
-            View All Projects...
-          </a>
+          <a href="/projects">See More Projects...</a>
         </Button>
       </div>
     </section>
