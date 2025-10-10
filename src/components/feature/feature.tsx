@@ -37,17 +37,16 @@ export default function Feature() {
           {/* Text Content */}
           <div className="max-w-md text-center md:text-left">
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-light transition-all duration-300 ease-in-out">
-              I'm sharing how I approach something and how my mental model
-              affects my learning about a certain topic.
+            I’m exploring how design, technology, and storytelling intersect — experimenting with ideas that make digital experiences more intuitive and human.
             </p>
           </div>
         </div>
 
         {/* Feature Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 w-full">
-          <FeatureCard key="card-1" rotateDeg={12} />
-          <FeatureCard key="card-2" />
-          <FeatureCard key="card-3" rotateDeg={12} />
+          <FeatureCard title='🧩 Creative Development' description='Building interactive experiences that blend motion, design, and code to tell meaningful stories.' key="card-1" rotateDeg={12} />
+          <FeatureCard  title='⚙️ Learning by Experimenting' description='Testing small projects and prototypes to understand how users engage with design details.' key="card-2" />
+          <FeatureCard title='💬 Sharing the Process' description='Writing and reflecting on what I learn — from creative challenges to technical problem-solving.' key="card-3" rotateDeg={12} />
         </div>
       </div>
     </section>

@@ -4,9 +4,11 @@ import { cn } from "@/lib/utils";
 
 interface FeatureCardProps {
   rotateDeg?: number;
+  title?: string;
+  description?: string;
 }
 
-export default function FeatureCard({ rotateDeg = 0 }: FeatureCardProps) {
+export default function FeatureCard({ rotateDeg = 0, title, description }: FeatureCardProps) {
   return (
     <div
       className={cn(
@@ -15,10 +17,10 @@ export default function FeatureCard({ rotateDeg = 0 }: FeatureCardProps) {
       style={{ transform: `rotate(${rotateDeg}deg)` }}
     >
       <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-primary dark:text-foreground">
-        Feature Title
+        {title || "Feature Title"}
       </h3>
       <p className="text-sm sm:text-base text-muted-foreground leading-relaxed font-light transition-all duration-300 ease-in-out">
-        This is a brief description of the feature. It explains what the feature is about and its benefits.
+        {description || "A brief description of the feature goes here."}
       </p>
     </div>
   );
