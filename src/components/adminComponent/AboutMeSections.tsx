@@ -1,3 +1,5 @@
+"use client";
+
 import {
   getAboutMe,
   updateAboutMe,
@@ -18,11 +20,14 @@ export default function AboutMeSection() {
   const [data, setData] = useState({
     id: '',
     name: '',
+    title: '',
+    bio: '',
     email: '',
     phone: '',
     address: '',
-    profilePic: '',
-    content: '',
+    profileImage: '',
+    techStack: [] as string[],
+    currentActivities: [] as string[],
   });
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -35,18 +40,20 @@ export default function AboutMeSection() {
 
   const loadData = async () => {
     const result = await getAboutMe();
-    debugger
     if (result.success && result.data) {
       setData({
         id: result.data.id ?? '',
         name: result.data.name ?? '',
+        title: result.data.title ?? '',
+        bio: result.data.bio ?? '',
         email: result.data.email ?? '',
         phone: result.data.phone ?? '',
         address: result.data.address ?? '',
-        profilePic: result.data.profilePic ?? '',
-        content: result.data.content ?? '',
+        profileImage: result.data.profileImage ?? '',
+        techStack: result.data.techStack ?? [],
+        currentActivities: result.data.currentActivities ?? [],
       });
-      setPreviewUrl(result.data.profilePic ?? '');
+      setPreviewUrl(result.data.profileImage ?? '');
     }
   };
 
@@ -56,14 +63,14 @@ export default function AboutMeSection() {
   };
 
   const handleSave = async () => {
-    if (!data.name || !data.email) {
-      toast.error('Name and email are required.');
+    if (!data.name || !data.email || !data.title || !data.bio) {
+      toast.error('Name, email, title, and bio are required.');
       return;
     }
 
     setLoading(true);
     try {
-      let profilePicUrl = data.profilePic;
+      let profileImageUrl = data.profileImage;
 
       // Step 1: Upload image if a file is selected
       if (file) {
@@ -79,17 +86,20 @@ export default function AboutMeSection() {
         if (!uploadResult.success) {
           throw new Error(uploadResult.error || 'Failed to upload image');
         }
-        profilePicUrl = uploadResult.url;
+        profileImageUrl = uploadResult.url;
       }
 
       // Step 2: Save form data with the image URL (if uploaded)
       const saveData = {
         name: data.name,
+        title: data.title,
+        bio: data.bio,
         email: data.email,
         phone: data.phone,
         address: data.address,
-        profilePic: profilePicUrl,
-        content: data.content,
+        profileImage: profileImageUrl,
+        techStack: data.techStack,
+        currentActivities: data.currentActivities,
       };
 
       const savePromise = data.id
@@ -118,7 +128,7 @@ export default function AboutMeSection() {
   const handleCancel = () => {
     setEditing(false);
     setFile(null);
-    setPreviewUrl(data.profilePic);
+    setPreviewUrl(data.profileImage);
     loadData();
   };
 
@@ -194,6 +204,23 @@ export default function AboutMeSection() {
                 </div>
                 <div>
                   <Label
+                    htmlFor="title"
+                    className="text-foreground font-medium dark:text-foreground"
+                  >
+                    Title *
+                  </Label>
+                  <Input
+                    id="title"
+                    type="text"
+                    value={data.title}
+                    onChange={(e) => setData({ ...data, title: e.target.value })}
+                    disabled={!editing}
+                    className="mt-2 bg-white/5 dark:bg-black/10 backdrop-blur-sm border-white/10 dark:border-black/10 text-foreground focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 rounded-xl dark:text-foreground dark:focus:ring-primary/50 dark:focus:border-primary/50"
+                    placeholder="Your professional title"
+                  />
+                </div>
+                <div>
+                  <Label
                     htmlFor="phone"
                     className="text-foreground font-medium dark:text-foreground"
                   >
@@ -230,20 +257,66 @@ export default function AboutMeSection() {
                     placeholder="City, Country"
                   />
                 </div>
+                <div>
+                  <Label
+                    htmlFor="techStack"
+                    className="text-foreground font-medium dark:text-foreground"
+                  >
+                    Tech Stack
+                  </Label>
+                  <Input
+                    id="techStack"
+                    type="text"
+                    value={data.techStack.join(', ')}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        techStack: e.target.value
+                          ? e.target.value.split(',').map((item) => item.trim())
+                          : [],
+                      })
+                    }
+                    disabled={!editing}
+                    className="mt-2 bg-white/5 dark:bg-black/10 backdrop-blur-sm border-white/10 dark:border-black/10 text-foreground focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 rounded-xl dark:text-foreground dark:focus:ring-primary/50 dark:focus:border-primary/50"
+                    placeholder="React, TypeScript, Node.js"
+                  />
+                </div>
+                <div>
+                  <Label
+                    htmlFor="currentActivities"
+                    className="text-foreground font-medium dark:text-foreground"
+                  >
+                    Current Activities
+                  </Label>
+                  <Input
+                    id="currentActivities"
+                    type="text"
+                    value={data.currentActivities.join(', ')}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        currentActivities: e.target.value
+                          ? e.target.value.split(',').map((item) => item.trim())
+                          : [],
+                      })
+                    }
+                    disabled={!editing}
+                    className="mt-2 bg-white/5 dark:bg-black/10 backdrop-blur-sm border-white/10 dark:border-black/10 text-foreground focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 rounded-xl dark:text-foreground dark:focus:ring-primary/50 dark:focus:border-primary/50"
+                    placeholder="Building projects, Learning AI"
+                  />
+                </div>
               </div>
               <div>
                 <Label
-                  htmlFor="content"
+                  htmlFor="bio"
                   className="text-foreground font-medium dark:text-foreground"
                 >
-                  About Content (HTML supported)
+                  Bio (HTML supported) *
                 </Label>
                 <Textarea
-                  id="content"
-                  value={data.content}
-                  onChange={(e) =>
-                    setData({ ...data, content: e.target.value })
-                  }
+                  id="bio"
+                  value={data.bio}
+                  onChange={(e) => setData({ ...data, bio: e.target.value })}
                   disabled={!editing}
                   rows={6}
                   className="mt-2 font-mono text-sm bg-white/5 dark:bg-black/10 backdrop-blur-sm border-white/10 dark:border-black/10 text-foreground focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 rounded-xl dark:text-foreground dark:focus:ring-primary/50 dark:focus:border-primary/50"
@@ -287,11 +360,11 @@ export default function AboutMeSection() {
             </div>
           )}
           <hr className="fade_rule" />
-          {!editing && data.content && (
+          {!editing && data.bio && (
             <div className="bg-white/5 dark:bg-black/10 backdrop-blur-sm border border-white/10 dark:border-black/10 rounded-2xl p-6 shadow-lg shadow-black/5 dark:shadow-white/5">
               <div
                 className="prose prose-sm max-w-none text-foreground dark:text-foreground"
-                dangerouslySetInnerHTML={{ __html: data.content }}
+                dangerouslySetInnerHTML={{ __html: data.bio }}
               />
             </div>
           )}

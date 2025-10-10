@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   FiEdit2, FiTrash2, FiPlus, FiSave, FiX, FiUser, FiBriefcase, 
   FiBook, FiLink, FiFolder, FiTag, FiGithub, FiGlobe, FiFileText,
@@ -13,21 +13,25 @@ import EducationSection from '@/components/adminComponent/EducationSection';
 import SocialLinksSection from '@/components/adminComponent/SocialLinkSections';
 import ProjectsSection from '@/components/adminComponent/ProjectSection';
 import { Toaster } from 'react-hot-toast';
+import RetrospectivesSection from '@/components/adminComponent/RetroSepectiveSection';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
-type Tab = 'about' | 'skills' | 'experience' | 'education' | 'social' | 'projects';
+type Tab = 'about' | 'skills' | 'experience' | 'education' | 'social' | 'projects' | 'retrospectives';
 
-export default function AdminPage() {
+export default function UpsertPage() {
   const [activeTab, setActiveTab] = useState<Tab>('about');
-
-  const tabs = [
+  const router = useRouter();
+    const tabs = [
     { id: 'about', label: 'About Me', icon: FiUser },
     { id: 'skills', label: 'Skills', icon: FiTrendingUp },
     { id: 'experience', label: 'Experience', icon: FiBriefcase },
     { id: 'education', label: 'Education', icon: FiBook },
     { id: 'social', label: 'Social Links', icon: FiLink },
-    { id: 'projects', label: 'Projects', icon: FiFolder }
+    { id: 'projects', label: 'Projects', icon: FiFolder },
+    { id: 'retrospectives', label: 'Retrospectives', icon: FiCalendar },
   ];
-
+  
   return (
     <div className="min-h-screen ">
         <Toaster
@@ -65,11 +69,22 @@ export default function AdminPage() {
       />
 
       <div className="border-b border-border shadow-sm pt-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center sm:px-6 lg:px-8">
           <div className="py-6">
             <h1 className="text-3xl font-bold text-primary">Admin Dashboard</h1>
             <p className="text-muted-foreground mt-2">Manage your portfolio content</p>
           </div>
+           <Button
+            variant="secondary"
+            onClick={() => {
+              // Clear auth cookie on logout
+              document.cookie = "auth_token=; max-age=0; path=/";
+              router.push("/admin/login");
+            }}
+            className="text-base sm:text-lg text-white bg-red-600 hover:text-primary/80"
+          >
+            Logout
+          </Button>
         </div>
       </div>
 
@@ -104,8 +119,8 @@ export default function AdminPage() {
         {activeTab === 'education' && <EducationSection />}
         {activeTab === 'social' && <SocialLinksSection />}
         {activeTab === 'projects' && <ProjectsSection />}
+        {activeTab === 'retrospectives' && <RetrospectivesSection />}
       </div>
     </div>
   );
 }
-

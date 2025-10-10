@@ -130,6 +130,7 @@ export default function ProjectsSection() {
   };
 
   const handleUpdate = async (id: string) => {
+    debugger
     if (!formData.name) {
       toast.error("Project name is required.");
       return;
