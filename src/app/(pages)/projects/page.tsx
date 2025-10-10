@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getProjects } from "@/app/actions/actions";
+import { getProjects } from "@/app/actions/project";
 import ProjectCard from "@/components/projects/ProjectCard";
 import { FaFolder } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
@@ -10,7 +10,7 @@ interface Project {
   id: string;
   name: string;
   description?: string;
-  thubnail?: string;
+  thumbnail?: string;
   notionLink?: string;
   githubLink?: string;
   liveLink?: string;
@@ -25,7 +25,7 @@ const fallbackProjects = [
     id: "static-1",
     name: "Hexcap",
     description: "A game that combines ISO and physical puzzle game, using 3D, 360 world view, and AR",
-    thubnail: "https://assets.justinmind.com/wp-content/uploads/2020/02/dashboard-example-applify.png",
+    thumbnail: "https://assets.justinmind.com/wp-content/uploads/2020/02/dashboard-example-applify.png",
     githubLink: "https://github.com/example/hexcap",
     liveLink: "https://hexcap.example.com",
     featured: true,
@@ -36,7 +36,7 @@ const fallbackProjects = [
     id: "static-2",
     name: "Portfolio",
     description: "A personal portfolio showcasing my projects and skills",
-    thubnail: "https://assets.justinmind.com/wp-content/uploads/2020/02/dashboard-example-applify.png",
+    thumbnail: "https://assets.justinmind.com/wp-content/uploads/2020/02/dashboard-example-applify.png",
     githubLink: "https://github.com/example/portfolio",
     liveLink: "https://portfolio.example.com",
     featured: false,
@@ -47,7 +47,7 @@ const fallbackProjects = [
     id: "static-3",
     name: "Task Manager",
     description: "A task management app with real-time collaboration features",
-    thubnail: "https://assets.justinmind.com/wp-content/uploads/2020/02/dashboard-example-applify.png",
+    thumbnail: "https://assets.justinmind.com/wp-content/uploads/2020/02/dashboard-example-applify.png",
     githubLink: "https://github.com/example/task-manager",
     liveLink: "https://taskmanager.example.com",
     featured: false,

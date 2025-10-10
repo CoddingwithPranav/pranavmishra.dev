@@ -9,7 +9,7 @@ interface Project {
   id: string;
   name: string;
   description?: string;
-  thubnail?: string;
+  thumbnail?: string;
   notionLink?: string;
   githubLink?: string;
   liveLink?: string;
@@ -76,7 +76,7 @@ export default function ProjectCard({ project, reverse }: ProjectCardProps) {
       </div>
       <div className="flex justify-center items-center mt-4 sm:mt-0">
         <img
-          src={project.thubnail || "https://via.placeholder.com/150"}
+          src={project.thumbnail || "https://via.placeholder.com/150"}
           alt={`${project.name} thumbnail`}
           className="w-32 sm:w-40 md:w-48 h-32 sm:h-40 md:h-48 object-cover rounded-lg border border-border"
         />

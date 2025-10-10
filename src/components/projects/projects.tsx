@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getProjects } from "@/app/actions/actions";
+import { getProjects } from "@/app/actions/project";
 import ProjectCard from "./ProjectCard";
 import { Button } from "../ui/button";
 import toast, { Toaster } from "react-hot-toast";
@@ -10,7 +10,7 @@ interface Project {
   id: string;
   name: string;
   description?: string;
-  thubnail?: string;
+  thumbnail?: string;
   notionLink?: string;
   githubLink?: string;
   liveLink?: string;
@@ -30,7 +30,7 @@ export default function ProjectSection() {
           id: project.id,
           name: project.name,
           description: project.description || "",
-          thubnail: project.thubnail || "",
+          thumbnail: project.thumbnail || "",
           notionLink: project.notionLink || "",
           githubLink: project.githubLink || "",
           liveLink: project.liveLink || "",

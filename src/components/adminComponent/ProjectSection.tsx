@@ -1,4 +1,4 @@
-import { getProjects, createProject, updateProject, deleteProject } from "@/app/actions/actions";
+import { getProjects, createProject, updateProject, deleteProject } from "@/app/actions/project";
 import { useState, useEffect } from "react";
 import { FiPlus, FiSave, FiGithub, FiGlobe, FiFileText, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ interface Project {
   id: string;
   name: string;
   description?: string;
-  thubnail?: string;
+  thumbnail?: string;
   notionLink?: string;
   githubLink?: string;
   liveLink?: string;
@@ -31,7 +31,7 @@ export default function ProjectsSection() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    thubnail: '',
+    thumbnail: '',
     notionLink: '',
     githubLink: '',
     liveLink: '',
@@ -62,7 +62,7 @@ export default function ProjectsSection() {
     setFormData({
       name: '',
       description: '',
-      thubnail: '',
+      thumbnail: '',
       notionLink: '',
       githubLink: '',
       liveLink: '',
@@ -79,7 +79,7 @@ export default function ProjectsSection() {
       return;
     }
     setFormFile(file);
-    setFormData({ ...formData, thubnail: preview });
+    setFormData({ ...formData, thumbnail: preview });
     if (file) {
       toast.success("Image selected successfully!");
     }
@@ -92,7 +92,7 @@ export default function ProjectsSection() {
     }
 
     try {
-      let thubnail = formData.thubnail;
+      let thumbnail = formData.thumbnail;
 
       // Upload image if a file is selected
       if (formFile) {
@@ -108,11 +108,11 @@ export default function ProjectsSection() {
         if (!uploadResult.success) {
           throw new Error(uploadResult.error || "Failed to upload image");
         }
-        thubnail = uploadResult.url;
+        thumbnail = uploadResult.url;
       }
 
       const result = await toast.promise(
-        createProject({ ...formData, thubnail }),
+        createProject({ ...formData, thumbnail }),
         {
           loading: "Adding project...",
           success: "Project added successfully!",
@@ -137,7 +137,7 @@ export default function ProjectsSection() {
     }
 
     try {
-      let thubnail = formData.thubnail;
+      let thumbnail = formData.thumbnail;
 
       // Upload image if a file is selected
       if (formFile) {
@@ -153,11 +153,11 @@ export default function ProjectsSection() {
         if (!uploadResult.success) {
           throw new Error(uploadResult.error || "Failed to upload image");
         }
-        thubnail = uploadResult.url;
+        thumbnail = uploadResult.url;
       }
 
       const result = await toast.promise(
-        updateProject(id, { ...formData, thubnail }),
+        updateProject(id, { ...formData, thumbnail }),
         {
           loading: "Updating project...",
           success: "Project updated successfully!",
@@ -197,7 +197,7 @@ export default function ProjectsSection() {
     setFormData({
       name: project.name,
       description: project.description || '',
-      thubnail: project.thubnail || '',
+      thumbnail: project.thumbnail || '',
       notionLink: project.notionLink || '',
       githubLink: project.githubLink || '',
       liveLink: project.liveLink || '',
@@ -246,7 +246,7 @@ export default function ProjectsSection() {
               </div>
               <div>
                 <ImageCropper
-                  value={formData.thubnail}
+                  value={formData.thumbnail}
                   onChange={handleImageChange}
                   label="Project Thumbnail"
                   aspectRatio={16 / 9} // Matches aspect-video in project list
@@ -353,10 +353,10 @@ export default function ProjectsSection() {
                   key={project.id}
                   className="bg-white/10 dark:bg-black/20 backdrop-blur-sm border border-white/10 dark:border-black/10 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 group shadow-lg shadow-black/5 dark:shadow-white/5"
                 >
-                  {project.thubnail && (
+                  {project.thumbnail && (
                     <div className="aspect-video bg-muted overflow-hidden">
                       <img
-                        src={project.thubnail}
+                        src={project.thumbnail}
                         alt={project.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />

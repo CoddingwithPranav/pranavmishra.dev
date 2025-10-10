@@ -1,4 +1,4 @@
-import { getProjects } from "@/app/actions/actions";
+import { getProjects } from "@/app/actions/project";
 import { getNotionPage } from "@/lib/getNotionPage";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

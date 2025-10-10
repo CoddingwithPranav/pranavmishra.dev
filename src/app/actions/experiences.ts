@@ -10,8 +10,10 @@ export async function getExperiences(aboutMeId: string) {
       where: { aboutMeId },
       orderBy: { startDate: 'desc' },
     });
+  
     return { success: true, data: experiences };
   } catch (error) {
+    console.log(error)
     return { success: false, error: 'Failed to fetch experiences' };
   }
 }
@@ -29,9 +31,12 @@ export async function createExperience(data: {
     const experience = await prisma.experiences.create({
       data,
     });
+    console.log('Experience created:', experience);
     revalidatePath('/admin');
     return { success: true, data: experience };
   } catch (error) {
+    console.log(error)
+
     return { success: false, error: 'Failed to create experience' };
   }
 }
@@ -49,9 +54,12 @@ export async function updateExperience(id: string, data: {
       where: { id },
       data,
     });
+    console.log('Project updated:', updated);
     revalidatePath('/admin');
     return { success: true, data: updated };
   } catch (error) {
+    console.log(error)
+
     return { success: false, error: 'Failed to update experience' };
   }
 }
@@ -64,6 +72,8 @@ export async function deleteExperience(id: string) {
     revalidatePath('/admin');
     return { success: true };
   } catch (error) {
+    console.log(error)
+
     return { success: false, error: 'Failed to delete experience' };
   }
 }

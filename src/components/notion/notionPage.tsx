@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { getProjects } from "@/app/actions/actions";
+import { getProjects } from "@/app/actions/project";
 import toast, { Toaster } from "react-hot-toast";
 import { Button } from "../ui/button";
 import Link from "next/link";
@@ -12,7 +12,7 @@ interface Project {
   id: string;
   name: string;
   description?: string;
-  thubnail?: string;
+  thumbnail?: string;
   notionLink?: string;
   githubLink?: string;
   liveLink?: string;
@@ -37,7 +37,7 @@ export default function NotionPage() {
             id: foundProject.id,
             name: foundProject.name,
             description: foundProject.description || "",
-            thubnail: foundProject.thumbnail || "",
+            thumbnail: foundProject.thumbnail || "",
             notionLink: foundProject.notionLink || "",
             githubLink: foundProject.githubLink || "",
             liveLink: foundProject.liveLink || "",

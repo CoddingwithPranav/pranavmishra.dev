@@ -52,6 +52,7 @@ model experiences {
   id          String   @id @default(uuid())
   title       String
   company     String
+  location    String?
   startDate   DateTime
   endDate     DateTime?
   description String?
