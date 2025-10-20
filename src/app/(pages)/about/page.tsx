@@ -10,6 +10,7 @@ import { FaEye } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
 import IconWrapper from '@/components/shared/IconWrapper';
 import Loading from '../loading';
+import SkillWrapper from '@/components/shared/SkillWarapper';
 
 interface AboutMe {
   id: string;
@@ -33,7 +34,14 @@ interface AboutMe {
     description: string;
     achievements: string[];
   }>;
+  skills?: Array<{
+    id: string;
+    name: string;
+    level: number | null;
+    imageUrl: string | null;
+  }>;
 }
+
 
 export default function AboutPage() {
   const [aboutMe, setAboutMe] = useState<AboutMe | null>(null);
@@ -51,6 +59,7 @@ export default function AboutPage() {
           techStack: aboutResult.data.techStack || [],
           currentActivities: aboutResult.data.currentActivities || [],
           retrospectives: aboutResult.data.retrospectives || [],
+          skills: aboutResult.data.skills || [],
           experiences: (aboutResult.data.experiences || []).map((exp: any) => ({
             title: exp.title,
             company: exp.company,
@@ -129,6 +138,27 @@ export default function AboutPage() {
         </div>
       </div>
 
+      <div className="flex flex-col gap-8 mt-10 bg-background shadow-xl/20 mb-10 p-6 relative z-10 mx-auto py-8 px-4 rounded-[var(--radius-lg)] border border-border/20 dark:border-border/30 shadow-md transition-all sm:p-8 sm:py-10 md:p-10 md:gap-10">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl text-primary">
+            <CiCircleQuestion aria-label="Skills icon" />
+          </span>
+          <h2 className="text-2xl font-semibold text-secondary">
+            Skills
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6 md:gap-8 lg:gap-10 justify-items-center md:justify-items-start w-full">
+          {(aboutMe.skills ?? []).map((skill, index) => (
+            <SkillWrapper 
+              key={index}
+              imageUrl={skill.imageUrl ?? ''} 
+              name={skill.name}
+            />
+          ))}
+        </div>
+      </div>
+
       <div className="flex mt-10 bg-background shadow-xl/20  mb-10 p-10 relative z-10 flex-col md:flex-row items-start justify-between gap-8 mx-auto py-10 px-6 rounded-[var(--radius-lg)] border border-border/20 dark:border-border/30 shadow-md transition-all">
         <div className="flex items-center gap-3 mb-4 md:mb-0">
           <span className="text-2xl text-primary">
@@ -166,12 +196,8 @@ export default function AboutPage() {
           {(aboutMe.retrospectives ?? []).map((retro, index) => (
             <div
               key={index}
-              className="flex flex-col gap-2 hover:shadow-md transition-shadow p-4 rounded-[var(--radius-lg)] border border-border/20 dark:border-border/30"
+              className="flex  shadow-xl/10    flex-col gap-2  transition-shadow p-4 rounded-[var(--radius-lg)]  "
             >
-              <span className="flex items-center gap-2 text-primary">
-                <FaEye className="text-lg" aria-label="Views icon" />{' '}
-                {retro.views.toLocaleString()} views
-              </span>
               <h3 className="text-xl font-medium text-secondary">
                 {retro.title}
               </h3>

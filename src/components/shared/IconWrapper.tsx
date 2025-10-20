@@ -2,16 +2,16 @@
 
 export default function IconWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative p-6 bg-gradient-to-br from-[#07db00]/20 via-[#07db00]/15 to-white/10 dark:from-[#07db00]/30 dark:via-[#07db00]/25 dark:to-white/20 backdrop-blur-2xl border border-white/30 dark:border-[#07db00]/40 rounded-full shadow-2xl shadow-[#07db00]/20 dark:shadow-white/10 group hover:scale-110 transition-all duration-500 overflow-hidden">
+    <div className="relative p-6 bg-gradient-to-br from-primary/20 via-primary/15 to-white/10 dark:from-primary/30 dark:via-primary/25 dark:to-white/20 backdrop-blur-2xl border border-white/30 dark:border-primary/40 rounded-full shadow-2xl shadow-primary/20 dark:shadow-white/10 group hover:scale-110 transition-all duration-500 overflow-hidden">
     {/* Galaxy Sparkles */}
     <div className="absolute inset-0 overflow-hidden rounded-full">
       {/* Tiny twinkling stars */}
       <div className="absolute top-2 left-3 w-1 h-1 bg-white rounded-full animate-ping opacity-50" />
-      <div className="absolute top-6 right-4 w-0.5 h-0.5 bg-[#07db00] rounded-full animate-pulse opacity-60" />
+      <div className="absolute top-6 right-4 w-0.5 h-0.5 bg-primary rounded-full animate-pulse opacity-60" />
       <div className="absolute bottom-3 left-5 w-1.5 h-1.5 bg-white rounded-full animate-bounce opacity-40" />
       
       {/* Galaxy Ring */}
-      <div className="absolute inset-0 rounded-full border border-[#07db00]/50 dark:border-white/30 animate-spin-slow" />
+      <div className="absolute inset-0 rounded-full border border-primary/50 dark:border-white/30 animate-spin-slow" />
     </div>
     
     {/* Inner Glow */}
