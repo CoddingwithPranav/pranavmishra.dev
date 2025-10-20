@@ -44,10 +44,7 @@ export default function Hero() {
           }}
         />
              
-         <div className="hidden sm:flex">
-          <OtherDesignerButtonMotionWrapper x="10%" y="70%" direction="left" />
-          <OtherDesignerButtonMotionWrapper x="80%" duration={5} y="30%" path="circle" direction="right" text="Open to work" />
-        </div>
+        
         {/* Titles */}
         <motion.div
           style={{ y: titleY }}
@@ -56,7 +53,10 @@ export default function Hero() {
           <h2 className="text-xl sm:text-2xl text-gray-950">Hey I'm a</h2>
           <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-primary">Software</h1>
         </motion.div>
-
+          <div className="hidden sm:flex">
+            <OtherDesignerButtonMotionWrapper x="10%" y="70%" direction="left" />
+            <OtherDesignerButtonMotionWrapper x="80%" duration={5} y="30%" path="circle" direction="right" text="Open to work" />
+          </div>
         <motion.div
           style={{ y: subtitleY }}
           className="w-full flex px-6 sm:px-12 md:px-20 lg:px-40 justify-end relative z-10 font-bold bottom-36 sm:bottom-52"
