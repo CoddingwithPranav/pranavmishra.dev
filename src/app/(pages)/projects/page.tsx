@@ -65,7 +65,7 @@ export default function ProjectPage() {
             <IconWrapper>
               <FaFolder
                 size={50}
-                color="#07db00"
+                color=" var(--primary)"
                 className="relative z-10 drop-shadow-lg group-hover:scale-110 transition-transform duration-300"
               />
             </IconWrapper>
