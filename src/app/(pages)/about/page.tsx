@@ -9,6 +9,7 @@ import { IoBagRemoveSharp } from 'react-icons/io5';
 import { FaEye } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
 import IconWrapper from '@/components/shared/IconWrapper';
+import Loading from '../loading';
 
 interface AboutMe {
   id: string;
@@ -73,9 +74,7 @@ export default function AboutPage() {
 
   if (!aboutMe) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-6 md:px-12 pt-36">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
+      <Loading />
     );
   }
 
