@@ -148,7 +148,7 @@ export default function Hero() {
           <img 
             src="./profile.png" 
             alt="Profile" 
-            className="w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full border-2 border-primary object-cover shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 hover:scale-105" 
+            className="w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full border-2 border-primary object-contain shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 hover:scale-105" 
           />
         </motion.div>
       </section>
