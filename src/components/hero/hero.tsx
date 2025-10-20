@@ -9,6 +9,7 @@ import {
 import { FaGithub, FaTwitter, FaLinkedin, FaFile } from "react-icons/fa";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import OtherDesignerButtonMotionWrapper from "../shared/desiginerButttonWrapper";
 
 export default function Hero() {
   const { scrollY } = useScroll();
@@ -36,13 +37,17 @@ export default function Hero() {
           className="absolute inset-0 z-0"
           style={{
             backgroundImage: `
-              linear-gradient(to right, #e5e7eb 1px, transparent 1px),
-              linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)
+            linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+            linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)
             `,
             backgroundSize: "40px 40px",
           }}
         />
-
+             
+         <div className="hidden sm:flex">
+          <OtherDesignerButtonMotionWrapper x="10%" y="70%" direction="left" />
+          <OtherDesignerButtonMotionWrapper x="80%" duration={5} y="30%" path="circle" direction="right" text="Open to work" />
+        </div>
         {/* Titles */}
         <motion.div
           style={{ y: titleY }}
@@ -155,3 +160,7 @@ export default function Hero() {
     </>
   );
 }
+
+
+
+
