@@ -27,9 +27,9 @@ export default function ProjectCard({ project, reverse }: ProjectCardProps) {
   return (
     <div
       className={cn(
-        "flex flex-col sm:flex-row sm:gap-4 md:gap-5 py-3 sm:py-4",
+        "flex flex-col sm:flex-row sm:gap-4 shadow-xl/10 md:gap-5 py-3 sm:py-4",
         reverse ? "sm:flex-row-reverse" : "sm:flex-row",
-        "bg-white/5 dark:bg-black/10 backdrop-blur-xl border border-white/10 dark:border-black/10 rounded-xl p-4 sm:p-6 hover:border-primary/50 transition-all duration-300 shadow-lg shadow-black/5 dark:shadow-white/5"
+        "bg-white/5 dark:bg-black/10 backdrop-blur-xl border border-white/10 dark:border-black/10 rounded-xl p-4 sm:p-6 hover:border-primary/50 transition-all duration-300  dark:shadow-white/5"
       )}
     >
       <div className="flex-1">
@@ -45,7 +45,7 @@ export default function ProjectCard({ project, reverse }: ProjectCardProps) {
             Featured
           </span>
         )}
-        <div className="flex flex-wrap gap-3 sm:gap-4">
+        <div className="flex flex-wrap justify-between gap-3 sm:gap-4">
           {(project.notionLink || project.liveLink) && (
             <Button
               variant="outline"

@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { 
-  FiEdit2, FiTrash2, FiPlus, FiSave, FiX, FiUser, FiBriefcase, 
-  FiBook, FiLink, FiFolder, FiTag, FiGithub, FiGlobe, FiFileText,
-  FiCalendar, FiMapPin, FiAward, FiTrendingUp
+   FiUser, FiBriefcase, 
+  FiBook, FiLink, FiFolder,
+  FiCalendar,  FiTrendingUp
 } from 'react-icons/fi';
 import AboutMeSection from '@/components/adminComponent/AboutMeSections';
 import SkillsSection from '@/components/adminComponent/SkillsSections';
@@ -68,7 +68,7 @@ export default function UpsertPage() {
         }}
       />
 
-      <div className="border-b border-border shadow-sm pt-40">
+      <div className="border-b border-border shadow-sm pt-40 bg-background relative z-10">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center sm:px-6 lg:px-8">
           <div className="py-6">
             <h1 className="text-3xl font-bold text-primary">Admin Dashboard</h1>
@@ -88,7 +88,7 @@ export default function UpsertPage() {
         </div>
       </div>
 
-      <div className="border-b sticky top-0 z-10">
+      <div className="border-b sticky top-0 z-10 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-1 overflow-x-auto py-4 scrollbar-hide">
             {tabs.map((tab) => {
@@ -112,7 +112,7 @@ export default function UpsertPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-background">
         {activeTab === 'about' && <AboutMeSection />}
         {activeTab === 'skills' && <SkillsSection />}
         {activeTab === 'experience' && <ExperienceSection />}

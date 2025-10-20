@@ -2,8 +2,6 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/navbar/navbar';
-import { BackgroundWrapper } from '../components/background';
-import { TracingBeam } from '@/components/ui/tracing-beam';
 import Footer from '@/components/footer/Footer';
 
 import "react-notion-x/src/styles.css";
@@ -35,13 +33,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <BackgroundWrapper>
-          <TracingBeam>
-            <Navbar />
-            <main>{children}</main>
-          </TracingBeam>
+          <Navbar />
+          <main>{children}</main>
           <Footer/>
-        </BackgroundWrapper>
       </body>
     </html>
   );

@@ -5,7 +5,7 @@ import { Input } from "../ui/input";
 
 export default function Footer() {
   return (
-    <footer className="w-full mt-12 sm:mt-16 md:mt-20 py-6 sm:py-8 px-4 sm:px-6 md:px-12">
+    <footer className="w-full mt-12 relative z-100 bg-background sm:mt-16 md:mt-20 py-6 sm:py-8 px-4 sm:px-6 md:px-12">
       <div className="fade_rule w-full max-w-6xl mx-auto"></div>
       <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 max-w-6xl mx-auto pt-8 sm:pt-12 md:pt-20">
         <div className="flex flex-col md:flex-row justify-between gap-6 sm:gap-8 md:gap-12">
@@ -78,7 +78,7 @@ export default function Footer() {
           {/* Newsletter Subscription */}
           <div className="text-center md:text-left">
             <h3 className="text-base sm:text-lg font-medium text-secondary dark:text-foreground mb-3">
-              Subscribe to Clarence's blog newsletter
+              Subscribe to my Newsletter
             </h3>
             <p className="text-sm sm:text-base text-muted-foreground mb-4 max-w-xs mx-auto md:mx-0">
               Don't miss out 😉. Get an email whenever I post, no spam.

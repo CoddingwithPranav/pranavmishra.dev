@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import toast, { Toaster } from "react-hot-toast";
-import ImageCropper from "../imagecopper";
+import ImageCropper from "../shared/imagecopper";
 
 interface Project {
   id: string;

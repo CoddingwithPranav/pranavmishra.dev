@@ -26,19 +26,29 @@ export default async function NotionProjectPage({ params }: { params: { projectI
   const pageId = match ? match[0].replace(/-/g, "") : null;
 
   if (!pageId) {
-    return <div>No Notion page linked</div>;
+    return <section className="px-4 sm:px-6 py-12">
+      <div className="max-w-4xl mx-auto relative z-10">
+        <h1 className="text-4xl  mt-32 text-center block font-semibold mb-6">Not Page </h1>
+       
+      </div>
+    </section>;
   }
 
   const recordMap = await getNotionPage(pageId);
 
   if (!recordMap) {
-    return <div>Failed to load Notion content.</div>;
+    return  <section className="px-4 sm:px-6 py-12">
+      <div className="max-w-4xl mx-auto relative z-10">
+        <h1 className="text-4xl  mt-32 text-center block font-semibold mb-6">Not Found</h1>
+       
+      </div>
+    </section>
   }
 
   return (
-    <section className="px-4 sm:px-6 py-12">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-semibold mb-6">{foundProject.name}</h1>
+    <section className="px-4 relative sm:px-6 py-12">
+      <div className=" relative z-10  w-full ">
+        <h1 className="text-4xl  mt-32 text-center block font-semibold mb-6">{foundProject.name}</h1>
         <NotionRendererClient recordMap={recordMap} />
       </div>
     </section>

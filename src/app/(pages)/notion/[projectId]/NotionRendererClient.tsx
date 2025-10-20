@@ -10,7 +10,7 @@ const NotionRenderer = dynamic(() => import("react-notion-x").then((m) => m.Noti
 export default function NotionRendererClient({ recordMap }: { recordMap: ExtendedRecordMap }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-6 dark:bg-black/10">
-      <NotionRenderer recordMap={recordMap} fullPage={true} darkMode={true} />
+      <NotionRenderer recordMap={recordMap}  fullPage={true} darkMode={false} />
     </div>
   );
 }

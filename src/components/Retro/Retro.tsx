@@ -3,8 +3,8 @@
 import { getAboutMe } from "@/app/actions/aboutMe";
 import { getRetrospectives } from "@/app/actions/retrospective";
 import { useState, useEffect } from "react";
-
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import RetroCard from "./RetroCard";
 
 interface Retrospective {
@@ -38,8 +38,15 @@ export default function Retro() {
   }, []);
 
   return (
-    <section className="min-h-screen flex flex-col px-4 sm:px-6 md:px-12 py-12">
-      <div className="flex flex-col mb-8 max-w-4xl mx-auto">
+    <section className="min-h-screen flex items-center flex-col md:px-12 py-12">
+      {/* Header */}
+      <motion.div
+        className="flex flex-col mb-8 text-center md:text-left"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <span className="text-secondary opacity-50 text-sm sm:text-base">
           the yearly
         </span>
@@ -50,11 +57,21 @@ export default function Retro() {
           Every year, I share my progress both in career and personal life. Here's
           last 3 years of them.
         </p>
-      </div>
+      </motion.div>
+
+      {/* Retrospective Cards */}
       <div className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
         {retrospectives.length > 0 ? (
-          retrospectives.map((retro) => (
-            <RetroCard key={retro.id} {...retro} />
+          retrospectives.map((retro, index) => (
+            <motion.div
+              key={retro.id}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ type: "spring", stiffness: 80, damping: 20, delay: index * 0.1 }}
+            >
+              <RetroCard {...retro} />
+            </motion.div>
           ))
         ) : (
           <p className="text-center text-muted-foreground col-span-full">

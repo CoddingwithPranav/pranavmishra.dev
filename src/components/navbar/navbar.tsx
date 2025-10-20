@@ -23,7 +23,7 @@ export function Navbar({ className }: { className?: string }) {
             <Link
               href="/"
               className={cn(
-                "relative px-2 py-1 transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary",
+                "relative px-2 py-1 transition-all text-secondary duration-300 group-hover:text-primary dark:group-hover:text-primary",
                 pathname === "/" && "text-primary dark:text-primary"
               )}
             >
@@ -36,7 +36,7 @@ export function Navbar({ className }: { className?: string }) {
               ></span>
             </Link>
           </li>
-          <li className="text-base sm:text-lg md:text-xl font-semibold cursor-pointer relative group">
+          <li className="text-base text-secondary sm:text-lg md:text-xl font-semibold cursor-pointer relative group">
             <Link
               href="/projects"
               className={cn(
@@ -53,7 +53,7 @@ export function Navbar({ className }: { className?: string }) {
               ></span>
             </Link>
           </li>
-          <li className="text-base sm:text-lg md:text-xl font-semibold cursor-pointer relative group">
+          <li className="text-base text-secondary sm:text-lg md:text-xl font-semibold cursor-pointer relative group">
             <Link
               href="/about"
               className={cn(

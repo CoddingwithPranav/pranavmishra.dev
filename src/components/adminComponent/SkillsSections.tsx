@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import toast, { Toaster } from "react-hot-toast";
-import ImageCropper from "../imagecopper";
+import ImageCropper from "../shared/imagecopper";
 
 interface Skill {
   id: string;
