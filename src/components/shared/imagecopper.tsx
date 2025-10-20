@@ -139,7 +139,7 @@ export default function ImageCropper({
   }
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn('space-y-2 z-1000', className)}>
       {label && <Label className="text-foreground font-medium">{label}</Label>}
 
       <div className="relative group rounded-2xl overflow-hidden">
