@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
   try {
     const { password } = await request.json();
-
+    
     if (password === process.env.ADMIN_PASSWORD) {
-      // Set a secure cookie for authentication
-      (await cookies()).set("auth_token", "authenticated", {
+      const hashedPassword =  bcrypt.hashSync(process.env.ADMIN_PASSWORD || "", 10);
+      (await cookies()).set("auth_token", hashedPassword, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
