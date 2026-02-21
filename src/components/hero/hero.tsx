@@ -69,7 +69,7 @@ export default function Hero() {
         {/* Background image with parallax */}
         <div className="absolute z-20 inset-x-0 bottom-0 flex justify-center">
           <motion.div style={{ y: bgY }}>
-            <img src="./background2.png" className="h-[30rem] sm:h-[45rem] md:h-[60rem] object-contain" />
+            <img src="./background2.png" className="h-[50vh] sm:h-[65vh] md:h-[75vh] lg:h-[85vh] w-auto object-contain" />
           </motion.div>
           <div
             className="absolute inset-0 z-0"
