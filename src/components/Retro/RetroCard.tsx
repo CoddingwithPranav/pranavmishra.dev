@@ -16,13 +16,7 @@ export default function RetroCard({ year, title, description, views }: RetroCard
       <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-secondary/5 rounded-full -translate-x-8 translate-y-8 opacity-50" />
       
       {/* Background Year with Enhanced Gradient */}
-      <div
-        className="absolute bottom-0 right-0 flex items-center justify-center text-primary/5 dark:text-primary/10 text-8xl sm:text-9xl font-black select-none pointer-events-none opacity-20"
-        style={{
-          background: "linear-gradient(135deg, transparent 0%, var(--primary)/5 50%, var(--secondary)/8 100%)",
-          padding: "1rem 2rem",
-        }}
-      >
+      <div className="absolute bottom-0 right-0 flex items-center justify-center px-8 py-4 text-primary/5 dark:text-primary/10 text-8xl sm:text-9xl font-black select-none pointer-events-none opacity-20">
         {year}
       </div>
 

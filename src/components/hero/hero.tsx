@@ -31,7 +31,7 @@ export default function Hero() {
 
   return (
     <>
-      <div className="min-h-screen pt-36  sm:pt-48 w-full bg-white relative flex flex-col justify-between">
+      <div className="min-h-screen pt-36  sm:pt-48 w-full bg-white relative flex flex-col justify-between overflow-x-hidden">
         {/* Grid background */}
         <div
           className="absolute inset-0 z-0"
@@ -59,9 +59,9 @@ export default function Hero() {
           </div>
         <motion.div
           style={{ y: subtitleY }}
-          className="w-full flex px-6 sm:px-12 md:px-20 lg:px-40 justify-end relative z-10 font-bold bottom-36 sm:bottom-52"
+          className="w-full flex px-6 sm:px-12 md:px-20 lg:px-40 justify-end relative z-10 font-bold bottom-0 sm:bottom-52"
         >
-          <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-gray-950 pb-16 sm:pb-32">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-gray-950 pb-8 sm:pb-32">
             Developer
           </h1>
         </motion.div>
@@ -69,7 +69,7 @@ export default function Hero() {
         {/* Background image with parallax */}
         <div className="absolute z-20 inset-x-0 bottom-0 flex justify-center">
           <motion.div style={{ y: bgY }}>
-            <img src="./background2.png" className="h-[50vh] sm:h-[65vh] md:h-[75vh] lg:h-[85vh] w-auto object-contain" />
+            <img src="./background2.png" className="h-[50vh] sm:h-[65vh] md:h-[75vh] lg:h-[85vh] w-auto max-w-full object-contain" />
           </motion.div>
           <div
             className="absolute inset-0 z-0"

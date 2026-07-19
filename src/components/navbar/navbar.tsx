@@ -11,7 +11,7 @@ export function Navbar({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "fixed inset-x-0 w-full sm:max-w-xl md:max-w-2xl mx-auto z-50 top-4 sm:top-6 md:top-10",
+        "fixed inset-x-0 w-full sm:max-w-xl md:max-w-2xl mx-auto z-50 top-4 sm:top-6 md:top-10 px-4 sm:px-0",
         className
       )}
     >

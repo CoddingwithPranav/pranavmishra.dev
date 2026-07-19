@@ -1,5 +1,3 @@
-import { TracingBeam } from '@/components/ui/tracing-beam';
-
 export default function RootLayout({
   children,
 }: {

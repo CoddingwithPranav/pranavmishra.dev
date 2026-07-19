@@ -1,14 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { getAboutMe } from '@/app/actions/aboutMe';
-import { MdAccountCircle } from 'react-icons/md';
-import { CiCircleQuestion } from 'react-icons/ci';
-import { AiOutlineStock } from 'react-icons/ai';
-import { IoBagRemoveSharp } from 'react-icons/io5';
-import { FaEye } from 'react-icons/fa';
-import toast, { Toaster } from 'react-hot-toast';
-import IconWrapper from '@/components/shared/IconWrapper';
 import Loading from '../loading';
 import SkillWrapper from '@/components/shared/SkillWarapper';
 
@@ -42,6 +36,68 @@ interface AboutMe {
   }>;
 }
 
+/** Reveal-on-scroll wrapper that respects prefers-reduced-motion. */
+function Reveal({
+  children,
+  className,
+  delay = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const reduce = useReducedMotion();
+  if (reduce) return <div className={className}>{children}</div>;
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, ease: 'easeOut', delay }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/** Small monospace section label, e.g. "// NOW". */
+function Eyebrow({ children }: { children: ReactNode }) {
+  return (
+    <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
+      {children}
+    </span>
+  );
+}
+
+/** A single node on the timeline spine. */
+function TimelineEntry({
+  marker,
+  first,
+  children,
+}: {
+  marker: string;
+  first?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div className="relative pl-8 sm:pl-10">
+      <span
+        aria-hidden
+        className={`absolute left-0 top-1.5 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-primary ${
+          first ? 'bg-primary' : 'bg-white'
+        }`}
+      />
+      <span className="font-mono text-xs uppercase tracking-[0.15em] text-primary">
+        {marker}
+      </span>
+      <div className="mt-2">{children}</div>
+    </div>
+  );
+}
+
+const monthYear = (value: string) =>
+  new Date(value).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 
 export default function AboutPage() {
   const [aboutMe, setAboutMe] = useState<AboutMe | null>(null);
@@ -82,176 +138,165 @@ export default function AboutPage() {
   }, []);
 
   if (!aboutMe) {
-    return (
-      <Loading />
-    );
+    return <Loading />;
   }
 
+  const skills = aboutMe.skills ?? [];
+  const activities = aboutMe.currentActivities ?? [];
+  const experiences = aboutMe.experiences ?? [];
+  const retrospectives = aboutMe.retrospectives ?? [];
+  const techStack = aboutMe.techStack ?? [];
+
   return (
-    <div className="min-h-screen flex flex-col items-center   justify-center px-6 md:px-12 pt-36">
-      <div className="text-center  relative z-10 max-w-2xl mb-16">
-        <span className="flex justify-center mb-4">
-          <IconWrapper>
-            <MdAccountCircle
-              size={60}
-              className="text-primary dark:text-foreground"
-              aria-label="Profile icon"
-            />
-          </IconWrapper>
-        </span>
-        <h1 className="text-5xl md:text-6xl font-bold text-secondary mb-4">
-          About <span className="text-primary">Me</span>
-        </h1>
-        <p className="text-muted-foreground text-lg leading-relaxed font-light">
-          A story of growth and discovery.
-        </p>
-      </div>
-
-      <div className="flex flex-col bg-background shadow-xl/20 rounded-2xl p-10  relative z-10 md:flex-row gap-20 max-w-4xl w-full">
-        <div className="flex-shrink-0">
-          <div className="featured-img ">
+    <div className="relative z-10 mx-auto min-h-screen max-w-5xl border-x border-border/40 bg-white px-5 pt-32 pb-24 shadow-sm sm:px-10">
+      {/* ── Intro hero: image + introduction ── */}
+      <Reveal>
+        <Eyebrow>// About me</Eyebrow>
+        <section className="mt-6 flex flex-col items-center gap-8 text-center sm:flex-row sm:items-start sm:gap-10 sm:text-left">
+          {/* Profile image */}
+          <div className="relative shrink-0">
+            <div className="absolute -inset-1.5 rounded-3xl bg-primary/20 blur-md" aria-hidden />
             <img
-              src={aboutMe.profileImage || 'https://via.placeholder.com/150'}
-              alt={`${aboutMe.name} profile`}
-              className="w-48 object-cover rounded-[var(--radius-lg)] shadow-lg hover:shadow-xl transition-shadow"
+              src={aboutMe.profileImage || 'https://via.placeholder.com/300'}
+              alt={`${aboutMe.name}, ${aboutMe.title}`}
+              className="relative h-48 w-48 rounded-3xl border-2 border-primary/40 object-cover shadow-xl sm:h-56 sm:w-56"
             />
           </div>
-        </div>
-        <div className="flex-1">
-          <h1 className="text-3xl font-semibold text-secondary dark:text-foreground mb-4">
-            {aboutMe.name}
-          </h1>
-          <span className="text-muted-foreground mb-4 block">
-            {aboutMe.title}
-          </span>
-          <div
-            className="prose prose-sm max-w-none text-muted-foreground leading-relaxed mb-4 dark:text-muted-foreground"
-            dangerouslySetInnerHTML={{ __html: aboutMe.bio }}
-          />
-          <div className="flex gap-4 text-primary flex-wrap">
-            {(aboutMe.techStack ?? []).map((tech, index) => (
-              <span key={index} className="text-lg">
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
 
-      <div className="flex flex-col gap-8 mt-10 bg-background shadow-xl/20 mb-10 p-6 relative z-10 mx-auto py-8 px-4 rounded-[var(--radius-lg)] border border-border/20 dark:border-border/30 shadow-md transition-all sm:p-8 sm:py-10 md:p-10 md:gap-10">
-        <div className="flex items-center gap-3">
-          <span className="text-2xl text-primary">
-            <CiCircleQuestion aria-label="Skills icon" />
-          </span>
-          <h2 className="text-2xl font-semibold text-secondary">
-            Skills
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6 md:gap-8 lg:gap-10 justify-items-center md:justify-items-start w-full">
-          {(aboutMe.skills ?? []).map((skill, index) => (
-            <SkillWrapper 
-              key={index}
-              imageUrl={skill.imageUrl ?? ''} 
-              name={skill.name}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div className="flex mt-10 bg-background shadow-xl/20  mb-10 p-10 relative z-10 flex-col md:flex-row items-start justify-between gap-8 mx-auto py-10 px-6 rounded-[var(--radius-lg)] border border-border/20 dark:border-border/30 shadow-md transition-all">
-        <div className="flex items-center gap-3 mb-4 md:mb-0">
-          <span className="text-2xl text-primary">
-            <CiCircleQuestion aria-label="Current activities icon" />
-          </span>
-          <h2 className="text-2xl font-semibold text-secondary">
-            What I'm up to now
-          </h2>
-        </div>
-        <div className="w-full">
-          <ul className="space-y-4 text-muted-foreground">
-            {(aboutMe.currentActivities ?? []).map((activity, index) => (
-              <li key={index} className="flex items-center gap-2">
-                {activity}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <div className="flex flex-col bg-background shadow-xl/20 rounded-2xl p-10 relative z-10 md:flex-row gap-12 py-20">
-        <div className="flex flex-col items-center md:items-start gap-4 text-center md:text-left">
-          <span className="text-3xl text-primary">
-            <AiOutlineStock aria-label="Growth icon" />
-          </span>
-          <h2 className="text-2xl font-semibold text-secondary">
-            Learn about my growth
-          </h2>
-          <p className="text-muted-foreground leading-relaxed font-light">
-            Every year, I share my progress both in career and personal life.
-            Here's how it's going
-          </p>
-        </div>
-        <div className="flex flex-col gap-6 w-full">
-          {(aboutMe.retrospectives ?? []).map((retro, index) => (
+          {/* Introduction */}
+          <div className="flex-1">
+            <h1 className="text-4xl font-bold tracking-tight text-secondary sm:text-5xl">
+              {aboutMe.name}
+            </h1>
+            <p className="mt-2 font-mono text-sm text-primary sm:text-base">
+              {aboutMe.title}
+            </p>
             <div
-              key={index}
-              className="flex  shadow-xl/10    flex-col gap-2  transition-shadow p-4 rounded-[var(--radius-lg)]  "
-            >
-              <h3 className="text-xl font-medium text-secondary">
-                {retro.title}
-              </h3>
-              <div
-                className="prose prose-sm max-w-none text-muted-foreground dark:text-muted-foreground"
-                dangerouslySetInnerHTML={{ __html: retro.description }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex flex-col bg-background shadow-xl/20 rounded-2xl p-10 relative z-10 gap-8 max-w-5xl mx-auto px-6 mt-10">
-        <div className="w-full text-center">
-          <span className="flex justify-center mb-2">
-            <IoBagRemoveSharp
-              className="text-3xl text-primary"
-              aria-label="Experiences icon"
+              className="prose prose-sm mt-5 max-w-none leading-relaxed text-muted-foreground marker:text-primary"
+              dangerouslySetInnerHTML={{ __html: aboutMe.bio }}
             />
-          </span>
-          <h2 className="text-2xl font-semibold text-secondary">Experiences</h2>
-        </div>
-        <div className="flex flex-col gap-6">
-          {(aboutMe.experiences ?? []).map((exp, index) => (
-            <div key={index} className="flex flex-col md:flex-row gap-6">
-              <div className="flex-shrink-0 text-muted-foreground">
-                {new Date(exp.startDate).toLocaleDateString('en-US', {
-                  month: 'short',
-                  year: 'numeric',
-                })}{' '}
-                -{' '}
-                {exp.endDate
-                  ? new Date(exp.endDate).toLocaleDateString('en-US', {
-                      month: 'short',
-                      year: 'numeric',
-                    })
-                  : 'PRESENT'}
+            {techStack.length > 0 && (
+              <div className="mt-6 flex flex-wrap justify-center gap-2 sm:justify-start">
+                {techStack.map((tech, index) => (
+                  <span
+                    key={index}
+                    className="rounded-md border border-primary/25 bg-primary/5 px-2.5 py-1 font-mono text-xs text-primary"
+                  >
+                    {tech}
+                  </span>
+                ))}
               </div>
-              <div className="flex-1">
-                <h1 className="text-2xl font-semibold text-secondary mb-2">
-                  {exp.title}
-                </h1>
-                <p className="text-muted-foreground mb-4 leading-relaxed">
-                  {exp.description}
-                </p>
-                <ul className="space-y-3 text-muted-foreground">
-                  {exp.achievements.map((achievement, idx) => (
-                    <li key={idx}>{achievement}</li>
-                  ))}
-                </ul>
+            )}
+          </div>
+        </section>
+      </Reveal>
+
+      <div className="mt-16 flex flex-col gap-16">
+        {/* Now panel */}
+        {activities.length > 0 && (
+          <Reveal>
+            <section className="rounded-2xl border border-border/50 bg-primary/[0.03] p-6 sm:p-8">
+              <Eyebrow>// Now</Eyebrow>
+              <h2 className="mt-2 text-xl font-semibold text-secondary sm:text-2xl">
+                What I&apos;m up to
+              </h2>
+              <ul className="mt-4 space-y-2.5">
+                {activities.map((activity, index) => (
+                  <li key={index} className="flex gap-3 text-muted-foreground">
+                    <span aria-hidden className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                    <span className="leading-relaxed">{activity}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </Reveal>
+        )}
+
+        {/* Skills */}
+        {skills.length > 0 && (
+          <Reveal>
+            <section>
+              <Eyebrow>// Stack</Eyebrow>
+              <h2 className="mt-2 text-xl font-semibold text-secondary sm:text-2xl">
+                Tools I reach for
+              </h2>
+              <div className="mt-6 flex flex-wrap justify-center gap-5 sm:justify-start sm:gap-7">
+                {skills.map((skill, index) => (
+                  <SkillWrapper
+                    key={index}
+                    imageUrl={skill.imageUrl ?? ''}
+                    name={skill.name}
+                  />
+                ))}
               </div>
-            </div>
-          ))}
-        </div>
+            </section>
+          </Reveal>
+        )}
+
+        {/* Timeline: experiences + retrospectives on one spine */}
+        {(experiences.length > 0 || retrospectives.length > 0) && (
+          <Reveal>
+            <section>
+              <Eyebrow>// Timeline</Eyebrow>
+              <h2 className="mt-2 text-xl font-semibold text-secondary sm:text-2xl">
+                The path so far
+              </h2>
+
+              <div className="relative mt-8 ml-2 space-y-12 border-l-2 border-border/60 py-2">
+                {experiences.map((exp, index) => (
+                  <TimelineEntry
+                    key={`exp-${index}`}
+                    first={index === 0}
+                    marker={`${monthYear(exp.startDate)} — ${
+                      exp.endDate ? monthYear(exp.endDate) : 'Present'
+                    }`}
+                  >
+                    <h3 className="text-lg font-semibold text-secondary sm:text-xl">
+                      {exp.title}
+                      {exp.company && (
+                        <span className="text-muted-foreground"> · {exp.company}</span>
+                      )}
+                    </h3>
+                    {exp.description && (
+                      <p className="mt-2 leading-relaxed text-muted-foreground">
+                        {exp.description}
+                      </p>
+                    )}
+                    {exp.achievements.length > 0 && (
+                      <ul className="mt-3 space-y-2">
+                        {exp.achievements.map((achievement, idx) => (
+                          <li key={idx} className="flex gap-2.5 text-muted-foreground">
+                            <span aria-hidden className="mt-2 h-1 w-1 flex-shrink-0 rounded-full bg-primary/60" />
+                            <span className="leading-relaxed">{achievement}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </TimelineEntry>
+                ))}
+
+                {retrospectives.map((retro, index) => (
+                  <TimelineEntry
+                    key={`retro-${index}`}
+                    first={experiences.length === 0 && index === 0}
+                    marker={`${retro.year} · Retrospective`}
+                  >
+                    <h3 className="text-lg font-semibold text-secondary sm:text-xl">
+                      {retro.title}
+                    </h3>
+                    <div
+                      className="prose prose-sm mt-2 max-w-none leading-relaxed text-muted-foreground"
+                      dangerouslySetInnerHTML={{ __html: retro.description }}
+                    />
+                    <span className="mt-3 inline-block font-mono text-xs text-muted-foreground/70">
+                      {retro.views} views
+                    </span>
+                  </TimelineEntry>
+                ))}
+              </div>
+            </section>
+          </Reveal>
+        )}
       </div>
     </div>
   );

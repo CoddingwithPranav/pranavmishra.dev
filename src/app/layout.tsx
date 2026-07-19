@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/navbar/navbar';
-import Footer from '@/components/footer/Footer';
 
 import "react-notion-x/src/styles.css";
 import "prismjs/themes/prism-tomorrow.css";
@@ -35,7 +34,6 @@ export default function RootLayout({
       >
           <Navbar />
           <main>{children}</main>
-          <Footer/>
       </body>
     </html>
   );

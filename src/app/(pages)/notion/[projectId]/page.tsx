@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import NotionRendererClient from "./NotionRendererClient";
 
-export default async function NotionProjectPage({ params }: { params: { projectId: string } }) {
-  const { projectId } = params;
+export default async function NotionProjectPage({ params }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params;
 
   const projectsResult = await getProjects();
   const foundProject = projectsResult.data?.find((p) => p.id === projectId);
@@ -36,7 +36,7 @@ export default async function NotionProjectPage({ params }: { params: { projectI
 
   const recordMap = await getNotionPage(pageId);
 
-  if (!recordMap) {
+  if (!recordMap || Object.keys(recordMap.block ?? {}).length === 0) {
     return  <section className="px-4 sm:px-6 py-12">
       <div className="max-w-4xl mx-auto relative z-10">
         <h1 className="text-4xl  mt-32 text-center block font-semibold mb-6">Not Found</h1>
