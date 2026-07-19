@@ -29,7 +29,7 @@
     "katex": "^0.16.23",
     "lucide-react": "^0.544.0",
     "motion": "^12.23.22",
-    "next": "15.5.4",
+    "next": "15.5.9",
     "notion-client": "^7.6.0",
     "notion-types": "^7.6.0",
     "pnpm": "^10.18.0",
