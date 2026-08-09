@@ -99,7 +99,7 @@ export default function Feature() {
           >
             <FeatureCard
               title="Agentic AI & MCP"
-              description="Model Context Protocol servers, LLM-driven features and prompt-engineered workflows built into real products, not demos."
+              description="Model Context Protocol servers, LLM-driven features and prompt-engineered workflows, built and self-hosted across my own side projects."
             />
           </motion.div>
 

@@ -22,7 +22,7 @@ const siteUrl = 'https://portfolio.pranavmishra.dev';
 const siteTitle = 'Pranav Mishra — Full Stack TypeScript Developer';
 const siteDescription =
   'Full Stack Developer in Kathmandu building scalable web applications with TypeScript, ' +
-  'Angular, React and Next.js on Node.js and PostgreSQL — plus agentic AI and MCP integrations.';
+  'Angular, React and Next.js on Node.js and PostgreSQL — plus agentic AI and MCP on the side.';
 
 // Every other page in this app is a client component and so cannot export its
 // own metadata. This is the only metadata the site gets.

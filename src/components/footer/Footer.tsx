@@ -25,8 +25,8 @@ export default function Footer() {
               Pranav Mishra
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4 max-w-xs mx-auto md:mx-0">
-              Full Stack TypeScript developer in Kathmandu, building scalable web applications
-              and agentic AI integrations.
+              Full Stack TypeScript developer in Kathmandu, building scalable web applications —
+              and agentic AI on the side.
             </p>
             <div className="flex justify-center md:justify-start gap-4 text-primary">
               {socials.map(({ label, href, Icon }) => {

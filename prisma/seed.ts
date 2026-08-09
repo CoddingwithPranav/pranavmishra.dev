@@ -31,9 +31,10 @@ const ABOUT = {
     'I architect dynamic frontends with Angular, React and Next.js, and back them with ',
     'Node.js and Express APIs over PostgreSQL and MongoDB. Day to day that means ',
     'monorepo architectures, CI/CD, and containerised deployments with Docker.</p>',
-    '<p>Alongside the traditional stack I work on agentic AI: integrating Model Context ',
-    'Protocol servers, LLM-driven features and prompt-engineered workflows into production ',
-    'software, so the systems I ship can act as well as respond.</p>',
+    '<p>Alongside the traditional stack I go deep on agentic AI in my own time: building ',
+    'Model Context Protocol servers, LLM-driven features and prompt-engineered workflows ',
+    'across side projects and a self-hosted home lab, and bringing what I learn back into ',
+    'the team as AI-assisted development tooling.</p>',
   ].join(''),
   techStack: [
     'TypeScript',
@@ -48,8 +49,9 @@ const ABOUT = {
   ],
   // No emoji: the About page renders its own bullet marker for each entry.
   currentActivities: [
-    'Building agentic AI integrations at Proshore — Model Context Protocol servers and Copilot-driven developer tooling.',
-    'Running a self-hosted Ubuntu home lab on Docker, Cloudflare Tunnels and nginx, with Prometheus and Grafana for observability.',
+    'Building Copilot-driven developer tooling and AI-assisted workflows for the team at Proshore.',
+    'Exploring agentic AI in side projects — Model Context Protocol servers, local models with Ollama and prompt-engineered workflows.',
+    'Running a self-hosted Ubuntu home lab on Docker, Cloudflare Tunnels and nginx, teaching myself observability with Prometheus and Grafana.',
     'Finishing a Bachelor of Computer Applications at Yeti International College.',
   ],
 };
@@ -73,6 +75,9 @@ const SKILLS = [
   { name: 'GitHub Copilot', imageUrl: simpleicon('githubcopilot') },
   { name: 'MCP', imageUrl: simpleicon('modelcontextprotocol') },
   { name: 'Ollama', imageUrl: simpleicon('ollama') },
+  // Home lab observability -- self-taught, not used professionally.
+  { name: 'Prometheus', imageUrl: simpleicon('prometheus') },
+  { name: 'Grafana', imageUrl: simpleicon('grafana') },
 ];
 
 const EXPERIENCES = [
@@ -83,7 +88,7 @@ const EXPERIENCES = [
     startDate: new Date('2024-08-01'),
     endDate: null,
     description:
-      'Building AI-assisted developer tooling and agentic integrations alongside production Angular frontends.',
+      'Shipping production Angular frontends, and building AI-assisted developer tooling for the team alongside them.',
     achievements: [
       'Streamlined frontend development with an AI-assisted workflow built on structured repositories and custom Copilot skills, granular instructions and optimized prompts.',
       'Developed Upfront Designer, a self-contained Chrome/Firefox extension for real-time DOM manipulation, whose background service worker calls the GitHub Copilot HTTP API directly — no external server hosting required.',

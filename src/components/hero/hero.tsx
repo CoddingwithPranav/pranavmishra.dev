@@ -107,8 +107,8 @@ export default function Hero() {
           <p className="text-sm sm:text-base md:text-lg text-muted-foreground mt-4 leading-relaxed">
             I&apos;m a Full Stack TypeScript developer based in Kathmandu. I build dynamic frontends
             with Angular, React and Next.js, back them with Node.js and Express APIs over PostgreSQL,
-            and ship them with Docker. Lately I&apos;ve been integrating agentic AI — MCP servers and
-            LLM-driven features — into production software.
+            and ship them with Docker. Lately I&apos;ve been going deep on agentic AI — MCP servers
+            and LLM-driven features — in side projects and my home lab.
           </p>
           <div className="flex flex-wrap gap-4 mt-6">
             <Button
