@@ -28,6 +28,13 @@ interface AboutMe {
     description: string;
     achievements: string[];
   }>;
+  educations?: Array<{
+    school: string;
+    degree: string;
+    fieldOfStudy: string;
+    startDate: string;
+    endDate?: string;
+  }>;
   skills?: Array<{
     id: string;
     name: string;
@@ -70,34 +77,51 @@ function Eyebrow({ children }: { children: ReactNode }) {
   );
 }
 
-/** A single node on the timeline spine. */
+/**
+ * A single node on the timeline spine. Role, place and dates share one title
+ * line; everything else sits underneath it.
+ */
 function TimelineEntry({
-  marker,
+  title,
+  place,
+  dates,
   first,
   children,
 }: {
-  marker: string;
+  title: string;
+  place?: string;
+  dates: string;
   first?: boolean;
-  children: ReactNode;
+  children?: ReactNode;
 }) {
   return (
     <div className="relative pl-8 sm:pl-10">
       <span
         aria-hidden
-        className={`absolute left-0 top-1.5 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-primary ${
+        className={`absolute left-0 top-2 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-primary ${
           first ? 'bg-primary' : 'bg-white'
         }`}
       />
-      <span className="font-mono text-xs uppercase tracking-[0.15em] text-primary">
-        {marker}
-      </span>
-      <div className="mt-2">{children}</div>
+      <div className="flex flex-col gap-x-4 gap-y-1 sm:flex-row sm:items-baseline sm:justify-between">
+        <h3 className="text-lg font-semibold text-secondary sm:text-xl">
+          {title}
+          {place && <span className="text-muted-foreground"> · {place}</span>}
+        </h3>
+        <span className="shrink-0 font-mono text-xs uppercase tracking-[0.15em] text-primary">
+          {dates}
+        </span>
+      </div>
+      {children && <div className="mt-2">{children}</div>}
     </div>
   );
 }
 
 const monthYear = (value: string) =>
   new Date(value).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+
+/** Prisma hands back Date objects; the client state stores ISO strings. */
+const toIso = (value: unknown) =>
+  value instanceof Date ? value.toISOString() : String(value);
 
 export default function AboutPage() {
   const [aboutMe, setAboutMe] = useState<AboutMe | null>(null);
@@ -108,8 +132,8 @@ export default function AboutPage() {
       if (aboutResult.success && aboutResult.data) {
         setAboutMe({
           id: aboutResult.data.id,
-          name: aboutResult.data.name || 'Unknown',
-          title: aboutResult.data.title || 'No Title',
+          name: aboutResult.data.name || 'Pranav Mishra',
+          title: aboutResult.data.title || 'Full Stack TypeScript Developer',
           bio: aboutResult.data.bio || '',
           profileImage: aboutResult.data.profileImage || '',
           techStack: aboutResult.data.techStack || [],
@@ -119,17 +143,17 @@ export default function AboutPage() {
           experiences: (aboutResult.data.experiences || []).map((exp: any) => ({
             title: exp.title,
             company: exp.company,
-            startDate:
-              exp.startDate instanceof Date
-                ? exp.startDate.toISOString()
-                : String(exp.startDate),
-            endDate: exp.endDate
-              ? exp.endDate instanceof Date
-                ? exp.endDate.toISOString()
-                : String(exp.endDate)
-              : undefined,
+            startDate: toIso(exp.startDate),
+            endDate: exp.endDate ? toIso(exp.endDate) : undefined,
             description: exp.description ?? '',
             achievements: exp.achievements || [],
+          })),
+          educations: (aboutResult.data.educations || []).map((edu: any) => ({
+            school: edu.school,
+            degree: edu.degree,
+            fieldOfStudy: edu.fieldOfStudy,
+            startDate: toIso(edu.startDate),
+            endDate: edu.endDate ? toIso(edu.endDate) : undefined,
           })),
         });
       }
@@ -146,6 +170,7 @@ export default function AboutPage() {
   const experiences = aboutMe.experiences ?? [];
   const retrospectives = aboutMe.retrospectives ?? [];
   const techStack = aboutMe.techStack ?? [];
+  const educations = aboutMe.educations ?? [];
 
   return (
     <div className="relative z-10 mx-auto min-h-screen max-w-5xl border-x border-border/40 bg-white px-5 pt-32 pb-24 shadow-sm sm:px-10">
@@ -157,7 +182,7 @@ export default function AboutPage() {
           <div className="relative shrink-0">
             <div className="absolute -inset-1.5 rounded-3xl bg-primary/20 blur-md" aria-hidden />
             <img
-              src={aboutMe.profileImage || 'https://via.placeholder.com/300'}
+              src={aboutMe.profileImage || '/profile.png'}
               alt={`${aboutMe.name}, ${aboutMe.title}`}
               className="relative h-48 w-48 rounded-3xl border-2 border-primary/40 object-cover shadow-xl sm:h-56 sm:w-56"
             />
@@ -220,7 +245,7 @@ export default function AboutPage() {
               <h2 className="mt-2 text-xl font-semibold text-secondary sm:text-2xl">
                 Tools I reach for
               </h2>
-              <div className="mt-6 flex flex-wrap justify-center gap-5 sm:justify-start sm:gap-7">
+              <div className="mt-6 flex flex-wrap justify-center gap-3 sm:justify-start">
                 {skills.map((skill, index) => (
                   <SkillWrapper
                     key={index}
@@ -233,8 +258,8 @@ export default function AboutPage() {
           </Reveal>
         )}
 
-        {/* Timeline: experiences + retrospectives on one spine */}
-        {(experiences.length > 0 || retrospectives.length > 0) && (
+        {/* Timeline: work and study on one spine */}
+        {(experiences.length > 0 || educations.length > 0) && (
           <Reveal>
             <section>
               <Eyebrow>// Timeline</Eyebrow>
@@ -247,18 +272,14 @@ export default function AboutPage() {
                   <TimelineEntry
                     key={`exp-${index}`}
                     first={index === 0}
-                    marker={`${monthYear(exp.startDate)} — ${
+                    title={exp.title}
+                    place={exp.company}
+                    dates={`${monthYear(exp.startDate)} — ${
                       exp.endDate ? monthYear(exp.endDate) : 'Present'
                     }`}
                   >
-                    <h3 className="text-lg font-semibold text-secondary sm:text-xl">
-                      {exp.title}
-                      {exp.company && (
-                        <span className="text-muted-foreground"> · {exp.company}</span>
-                      )}
-                    </h3>
                     {exp.description && (
-                      <p className="mt-2 leading-relaxed text-muted-foreground">
+                      <p className="leading-relaxed text-muted-foreground">
                         {exp.description}
                       </p>
                     )}
@@ -275,23 +296,51 @@ export default function AboutPage() {
                   </TimelineEntry>
                 ))}
 
-                {retrospectives.map((retro, index) => (
+                {educations.map((edu, index) => (
                   <TimelineEntry
-                    key={`retro-${index}`}
+                    key={`edu-${index}`}
                     first={experiences.length === 0 && index === 0}
-                    marker={`${retro.year} · Retrospective`}
+                    title={edu.degree}
+                    place={edu.school}
+                    dates={`${monthYear(edu.startDate)} — ${
+                      edu.endDate ? monthYear(edu.endDate) : 'Present'
+                    }`}
                   >
-                    <h3 className="text-lg font-semibold text-secondary sm:text-xl">
+                    {edu.fieldOfStudy && (
+                      <p className="leading-relaxed text-muted-foreground">
+                        {edu.fieldOfStudy}
+                      </p>
+                    )}
+                  </TimelineEntry>
+                ))}
+              </div>
+            </section>
+          </Reveal>
+        )}
+
+        {/* Retrospectives: a year ledger, not a timeline */}
+        {retrospectives.length > 0 && (
+          <Reveal>
+            <section>
+              <Eyebrow>// Year notes</Eyebrow>
+              <h2 className="mt-2 text-xl font-semibold text-secondary sm:text-2xl">
+                Looking back
+              </h2>
+
+              <div className="mt-8 grid gap-px overflow-hidden rounded-2xl bg-border/60 sm:grid-cols-3">
+                {retrospectives.map((retro, index) => (
+                  <article key={`retro-${index}`} className="bg-white p-6">
+                    <span className="block font-mono text-4xl font-bold leading-none tracking-tight text-primary/25 sm:text-5xl">
+                      {retro.year}
+                    </span>
+                    <h3 className="mt-4 text-base font-semibold text-secondary">
                       {retro.title}
                     </h3>
                     <div
                       className="prose prose-sm mt-2 max-w-none leading-relaxed text-muted-foreground"
                       dangerouslySetInnerHTML={{ __html: retro.description }}
                     />
-                    <span className="mt-3 inline-block font-mono text-xs text-muted-foreground/70">
-                      {retro.views} views
-                    </span>
-                  </TimelineEntry>
+                  </article>
                 ))}
               </div>
             </section>

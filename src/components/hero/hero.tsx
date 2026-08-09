@@ -6,7 +6,7 @@ import {
   useSpring,
   useScroll,
 } from "framer-motion";
-import { FaGithub, FaTwitter, FaLinkedin, FaFile } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaFile, FaEnvelope } from "react-icons/fa";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -17,8 +17,8 @@ export default function Hero() {
 
   const socialLinks = [
     { name: "GitHub", icon: <FaGithub />, href: "https://github.com/CoddingwithPranav" },
-    { name: "Twitter", icon: <FaTwitter />, href: "https://twitter.com" },
-    { name: "LinkedIn", icon: <FaLinkedin />, href: "https://www.linkedin.com/in/pranav-mishra-9416a6289" },
+    { name: "LinkedIn", icon: <FaLinkedin />, href: "https://www.linkedin.com/in/pranavmishra2101/" },
+    { name: "Email", icon: <FaEnvelope />, href: "mailto:pranavmishra632@gmail.com" },
     { name: "Resume", icon: <FaFile />, href: "https://app.sajilocv.com/cv/578fb001-eac0-4c0a-b2a2-e1acd93be130" },
   ];
 
@@ -105,7 +105,10 @@ export default function Hero() {
             I'm Pranav
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-muted-foreground mt-4 leading-relaxed">
-            I'm Full-Stack JavaScript Developer proficient in building scalable web applications using Angular, React, and Next.js for dynamic frontends, alongside Node.js and Express for robust APIs.
+            I&apos;m a Full Stack TypeScript developer based in Kathmandu. I build dynamic frontends
+            with Angular, React and Next.js, back them with Node.js and Express APIs over PostgreSQL,
+            and ship them with Docker. Lately I&apos;ve been integrating agentic AI — MCP servers and
+            LLM-driven features — into production software.
           </p>
           <div className="flex flex-wrap gap-4 mt-6">
             <Button
@@ -140,6 +143,8 @@ export default function Hero() {
                 key={link.name}
                 href={link.href}
                 aria-label={link.name}
+                target={link.href.startsWith("mailto:") ? undefined : "_blank"}
+                rel={link.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
@@ -158,7 +163,7 @@ export default function Hero() {
         <div className="flex justify-center">
           <Image
             src="/profile.png"
-            alt="Profile"
+            alt="Pranav Mishra, Full Stack TypeScript Developer"
             width={566}
             height={800}
             priority

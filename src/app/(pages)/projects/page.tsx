@@ -65,7 +65,7 @@ export default function ProjectPage() {
             <IconWrapper>
               <FaFolder
                 size={50}
-                color=" var(--primary)"
+                color="var(--primary)"
                 className="relative z-10 drop-shadow-lg group-hover:scale-110 transition-transform duration-300"
               />
             </IconWrapper>
@@ -94,7 +94,7 @@ export default function ProjectPage() {
             ))
           ) : (
             <div className="flex flex-col items-center justify-center py-20">
-              <FaFolder size={80} color="#07db00" className="mb-4 opacity-50" />
+              <FaFolder size={80} color="var(--primary)" className="mb-4 opacity-50" />
               <h2 className="text-2xl font-semibold text-secondary mb-2">
                 No Projects Found
               </h2>

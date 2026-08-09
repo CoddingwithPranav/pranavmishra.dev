@@ -56,9 +56,24 @@ export default function Feature() {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-light transition-all duration-300 ease-in-out">
-              I’m exploring how design, technology, and storytelling intersect — experimenting with ideas that make digital experiences more intuitive and human.
+              Four years of shipping production web applications — from Figma handoff to a
+              containerised deployment. I care about the parts users never see: predictable state,
+              typed contracts, and infrastructure that stays up.
             </p>
           </motion.div>
+        </motion.div>
+
+        {/* Section heading */}
+        <motion.div
+          className="max-w-2xl text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-secondary">
+            What I <span className="text-primary">work on</span>
+          </h2>
         </motion.div>
 
         {/* Feature Cards */}
@@ -70,8 +85,8 @@ export default function Feature() {
             transition={{ type: "spring", stiffness: 80, damping: 20 }}
           >
             <FeatureCard
-              title="🧩 Creative Development"
-              description="Building interactive experiences that blend motion, design, and code to tell meaningful stories."
+              title="Full-Stack TypeScript"
+              description="End-to-end applications in Angular, React and Next.js, backed by Node.js and Express APIs over PostgreSQL and Prisma."
               rotateDeg={12}
             />
           </motion.div>
@@ -83,8 +98,8 @@ export default function Feature() {
             transition={{ type: "spring", stiffness: 80, damping: 20, delay: 0.1 }}
           >
             <FeatureCard
-              title="⚙️ Learning by Experimenting"
-              description="Testing small projects and prototypes to understand how users engage with design details."
+              title="Agentic AI & MCP"
+              description="Model Context Protocol servers, LLM-driven features and prompt-engineered workflows built into real products, not demos."
             />
           </motion.div>
 
@@ -95,8 +110,8 @@ export default function Feature() {
             transition={{ type: "spring", stiffness: 80, damping: 20, delay: 0.2 }}
           >
             <FeatureCard
-              title="💬 Sharing the Process"
-              description="Writing and reflecting on what I learn — from creative challenges to technical problem-solving."
+              title="Real-Time & Infrastructure"
+              description="WebSocket and WebRTC systems, containerised with Docker and self-hosted behind nginx and Cloudflare Tunnels."
               rotateDeg={12}
             />
           </motion.div>

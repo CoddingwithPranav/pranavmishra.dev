@@ -18,7 +18,7 @@ export default function OtherDesignerButtonMotionWrapper({
   path = 'float',
   duration = 3,
   direction = 'left',
-  text = 'Develop Now',
+  text = 'See my work',
 }: AnimatedButtonProps) {
   let animateProps = {};
 

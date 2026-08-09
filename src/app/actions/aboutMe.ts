@@ -6,15 +6,16 @@ import { revalidatePath } from 'next/cache';
 export async function getAboutMe() {
   try {
     const aboutMe = await prisma.aboutMe.findFirst({
+      // Ordered here so the About page timeline reads newest-first without
+      // having to sort client-side.
       include: {
         skills: true,
-        experiences: true,
-        educations: true,
+        experiences: { orderBy: { startDate: 'desc' } },
+        educations: { orderBy: { startDate: 'desc' } },
         socialLinks: true,
-        retrospectives: true,
+        retrospectives: { orderBy: { year: 'desc' } },
       },
     });
-    console.log("Fetched about me:", aboutMe);
     return { success: true, data: aboutMe };
   } catch (error) {
     return { success: false, error: 'Failed to fetch about me data' };
@@ -37,7 +38,6 @@ export async function updateAboutMe(id: string, data: {
       where: { id },
       data,
     });
-    console.log("Updated about me:", updated);
     revalidatePath('/admin');
     return { success: true, data: updated };
   } catch (error) {
