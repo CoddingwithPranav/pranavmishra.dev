@@ -62,10 +62,9 @@ POSTGRES_DB=${POSTGRES_DB}
 DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
 
 # --- Notion ---
-# How to get: https://www.notion.so/my-integrations -> "New integration"
-# -> copy the "Internal Integration Secret". Then share the page/database with
-# the integration so it can read it.
-NOTION_TOKEN=
+# No token needed. Project pages are read through the unofficial notion-client,
+# which only works on pages you have published: open the page in Notion and use
+# Share -> Publish -> Publish to web.
 
 # --- ImageKit (https://imagekit.io) ---
 # How to get: ImageKit dashboard -> Developer options -> API Keys.

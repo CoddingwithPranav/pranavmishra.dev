@@ -25,7 +25,7 @@ export default function Feature() {
         >
           <div className="relative flex-shrink-0 pb-8 sm:pb-10">
             <img
-              src="./greenmakeitsimple.svg"
+              src="/greenmakeitsimple.svg"
               alt="Feature illustration"
               className="w-full max-w-xs sm:max-w-sm md:max-w-md h-auto object-contain"
             />
@@ -39,7 +39,7 @@ export default function Feature() {
                 }}
               >
                 <img
-                  src="./bulb.svg"
+                  src="/bulb.svg"
                   alt="Idea bulb"
                   className="w-10 sm:w-12 h-10 sm:h-12 object-contain text-primary"
                 />

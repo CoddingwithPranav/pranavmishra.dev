@@ -3,7 +3,6 @@ import Hero from "@/components/hero/hero";
 import ProjectSection from "@/components/projects/projects";
 import Retro from "@/components/Retro/Retro";
 import './globals.css'
-import "react-notion-x/src/styles.css";
 
 
 export default function Home() {

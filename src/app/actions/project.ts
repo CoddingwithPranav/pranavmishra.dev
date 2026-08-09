@@ -11,10 +11,20 @@ export async function getProjects() {
 
       orderBy: { createdAt: 'desc' },
     });
-    console.log(projects)
     return { success: true, data: projects };
   } catch (error) {
     return { success: false, error: 'Failed to fetch projects' };
+  }
+}
+
+export async function getProjectById(id: string) {
+  try {
+    const project = await prisma.projects.findUnique({
+      where: { id },
+    });
+    return { success: true, data: project };
+  } catch (error) {
+    return { success: false, error: 'Failed to fetch project' };
   }
 }
 
@@ -31,11 +41,10 @@ export async function createProject(data: {
     const project = await prisma.projects.create({
       data,
     });
-    console.log('Project created:', project);
     revalidatePath('/admin');
     return { success: true, data: project };
   } catch (error) {
-    console.log(error)
+    console.error('createProject failed:', error);
     return { success: false, error: 'Failed to create project' };
   }
 }
@@ -50,16 +59,14 @@ export async function updateProject(id: string, data: {
   featured?: boolean;
 }) {
   try {
-    console.log('Updating project with data:',id ,  data);
     const updated = await prisma.projects.update({
       where: { id },
       data,
     });
-    console.log('Project updated:', updated);
     revalidatePath('/admin');
     return { success: true, data: updated };
   } catch (error) {
-    console.log(error)
+    console.error('updateProject failed:', error);
     return { success: false, error: 'Failed to update project' };
   }
 }

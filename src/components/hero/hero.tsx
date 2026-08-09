@@ -9,6 +9,7 @@ import {
 import { FaGithub, FaTwitter, FaLinkedin, FaFile } from "react-icons/fa";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import OtherDesignerButtonMotionWrapper from "../shared/desiginerButttonWrapper";
 
 export default function Hero() {
@@ -69,7 +70,15 @@ export default function Hero() {
         {/* Background image with parallax */}
         <div className="absolute z-20 inset-x-0 bottom-0 flex justify-center">
           <motion.div style={{ y: bgY }}>
-            <img src="./background2.png" className="h-[50vh] sm:h-[65vh] md:h-[75vh] lg:h-[85vh] w-auto max-w-full object-contain" />
+            <Image
+              src="/background2.png"
+              alt=""
+              width={2048}
+              height={2048}
+              priority
+              sizes="100vw"
+              className="h-[50vh] sm:h-[65vh] md:h-[75vh] lg:h-[85vh] w-auto max-w-full object-contain"
+            />
           </motion.div>
           <div
             className="absolute inset-0 z-0"
@@ -142,20 +151,21 @@ export default function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* Profile Image */}
-        <motion.div
-          className="flex justify-center"
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <img 
-            src="./profile.png" 
-            alt="Profile" 
-            className="w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full border-2 border-primary object-contain shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 hover:scale-105" 
+        {/* Profile Image. Deliberately not wrapped in a whileInView fade: the
+            enter animation replays on every remount (viewport.once only dedupes
+            within a single mount), which reads as the image reloading whenever
+            you navigate back to the home page. */}
+        <div className="flex justify-center">
+          <Image
+            src="/profile.png"
+            alt="Profile"
+            width={566}
+            height={800}
+            priority
+            sizes="(max-width: 640px) 192px, (max-width: 768px) 256px, (max-width: 1024px) 288px, 320px"
+            className="w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full border-2 border-primary object-contain shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 hover:scale-105"
           />
-        </motion.div>
+        </div>
       </section>
     </>
   );

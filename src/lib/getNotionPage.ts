@@ -3,8 +3,23 @@
 import { NotionAPI } from "notion-client";
 import type { ExtendedRecordMap } from "notion-types";
 
+// No authToken on purpose. `notion-client` talks to Notion's private
+// `www.notion.so/api/v3` endpoint, whose authToken must be the browser
+// `token_v2` cookie -- an official `ntn_`/`secret_` integration key is
+// rejected with 403. Pages are read unauthenticated instead, which works
+// for any page that has been "Published to web" in Notion.
+//
+// The User-Agent is not optional: Notion 403s `api/v3` requests that don't
+// look like they came from a browser, so ofetch's default UA fails on every
+// page including public ones. Verified against the public react-notion-x
+// test page -- identical request, 403 without this header, 200 with it.
 const notion = new NotionAPI({
-  authToken: process.env.NOTION_TOKEN,
+  ofetchOptions: {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    },
+  },
 });
 
 // notion-client 7.6.0 returns each record double-wrapped as
@@ -38,7 +53,12 @@ export async function getNotionPage(pageId: string) {
     const recordMap = await notion.getPage(pageId);
     return normalizeRecordMap(recordMap);
   } catch (error) {
-    console.error("getNotionPage: Error fetching Notion page", error);
+    console.error(`getNotionPage: failed to fetch Notion page ${pageId}`, error);
+    if (String(error).includes("403")) {
+      console.error(
+        `getNotionPage: 403 from Notion for ${pageId} -- the page is most likely not published to web. Open it in Notion and use Share > Publish > Publish to web.`,
+      );
+    }
     return null;
   }
 }
